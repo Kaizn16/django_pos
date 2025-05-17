@@ -1,19 +1,28 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/output.css' %}">
-    <title>Document</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="{% static 'css/output.css' %}" />
+    <title>Point Of Sale</title>
 </head>
 <body>
-    {% include "layout/_navbar.html" %}
-    <div class="layout-container">
-        {% include "layout/_sidebar.html" %}
+    {% if request.user.is_authenticated %}
+    <div class="layout-container flex min-h-screen">
+        {% include "layouts/_sidebar.html" %}
 
-        <main class="content">
-            {% block content %}{% endblock %}
-        </main>
+        <div class="flex flex-col flex-grow ml-0 md:ml-64 min-h-screen">
+
+            {% include "layouts/_navbar.html" %}
+
+            <main class="flex-grow p-6 bg-gray-50">
+                {% block content %}
+                {% endblock %}
+            </main>
+        </div>
     </div>
-</body>
+    <script src="{% static 'js/index.js' %}"></script>
+    {% endif %}
+</body> 
 </html>
