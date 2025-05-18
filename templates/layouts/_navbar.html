@@ -1,7 +1,7 @@
 <header class="flex justify-end items-center bg-gray-900 text-white px-6 py-3 shadow-md">
     <div class="relative">
         <button id="profileBtn" class="flex items-center space-x-2 focus:outline-none">
-            <span>{{ request.user.username }}</span>
+            <span>{{ request.user.name }}</span>
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
                 stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="6 9 12 15 18 9" />
@@ -10,7 +10,7 @@
 
         <!-- Dropdown -->
         <div id="profileDropdown" class="hidden absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg text-gray-800 z-50">
-            <a href="{% url 'login:logout' %}" class="block px-4 py-2 hover:bg-amber-400 hover:text-white">Logout</a>
+            <a href="{% url 'login:logout' %}" class="block px-4 py-2 hover:bg-blue-400 hover:text-white">Logout</a>
         </div>
     </div>
 </header>

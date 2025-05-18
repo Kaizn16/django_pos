@@ -15,8 +15,9 @@
         <ul class="space-y-4 px-6">
             <li>
                 <a href="{% url 'login:dashboard' %}" 
-                   class="block py-2 px-4 rounded hover:bg-blue-400 hover:text-gray-900 transition">
-                   My dashboard
+                class="block py-2 px-4 rounded transition 
+                {% if request.resolver_match.url_name == 'dashboard' %}bg-blue-400 text-white font-bold{% else %}hover:bg-blue-400 hover:text-gray-900{% endif %}">
+                Dashboard   
                 </a>
             </li>
         </ul>
