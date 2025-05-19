@@ -5,7 +5,7 @@ class Command(BaseCommand):
     help = 'Seed roles data'
 
     def handle(self, *args, **kwargs):
-        roles = ['administrator', 'manager', 'cashier', 'customer']
+        roles = ['administrator', 'manager', 'cashier']
 
         for role_type in roles:
             _, created = Role.objects.get_or_create(role_type=role_type)
