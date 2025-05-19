@@ -3,42 +3,56 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserM
 from django.utils import timezone
 
 # Create your models here.
+class Role(models.Model):
+    class Meta:
+        db_table = 'tbl_roles'
+    
+    role_id = models.BigAutoField(primary_key=True, blank=False)
+    role_type = models.CharField(max_length=20, blank=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
 
 class CustomUserManager(UserManager):
-    def _create_user(self, username, email, name, password, **extra_fields):
+    def _create_user(self, username, email, name, password, role=None, **extra_fields):
         if not username:
             raise ValueError("Username is required")
-
         if not email:
             raise ValueError("You have not provided a valid email address")
-        
         if not name:
             raise ValueError("Name is required")
+        if not role:
+            raise ValueError("Role is required")
         
         email = self.normalize_email(email)
-        user = self.model(username=username, email=email, name=name, **extra_fields)
+        
+        user = self.model(
+            username=username,
+            email=email,
+            name=name,
+            role=role,
+            **extra_fields
+        )
         user.set_password(password)
         user.save(using=self.db)
-
         return user
 
-    def create_user(self, username=None, email=None, name=None, password=None, **extra_fields):
+    def create_user(self, username=None, email=None, name=None, password=None, role=None, **extra_fields):
         extra_fields.setdefault('is_staff', False)
         extra_fields.setdefault('is_superuser', False)
-        
-        return self._create_user(username, email, name, password, **extra_fields)
-    
-    def create_superuser(self, username, email, name, password, **extra_fields):
+        return self._create_user(username, email, name, password, role, **extra_fields)
+
+    def create_superuser(self, username, email, name, password, role=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
-        
-        return self._create_user(username, email, name, password, **extra_fields)
+        return self._create_user(username, email, name, password, role, **extra_fields)
     
 class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=255, blank=True, default='', unique=True)
     email = models.EmailField(blank=True, default='', unique=True)
     name = models.CharField(max_length=255, blank=True, default='')
-
+    role = models.ForeignKey(Role, on_delete=models.CASCADE, null=True, blank=True)
+    
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)

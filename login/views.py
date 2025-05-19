@@ -1,7 +1,12 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-# Create your views here.
+from django.contrib import messages
 
 @login_required
 def dashboard(request):
-    return render(request, 'accounts/dashoard.html')
+    
+    if not request.session.get('has_seen_login_message', False):
+        messages.success(request, "Login successfully!")
+        request.session['has_seen_login_message'] = True
+
+    return render(request, 'pages/dashoard.html')

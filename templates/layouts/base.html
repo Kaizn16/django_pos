@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="{% static 'css/output.css' %}" />
-    <title>Point Of Sale</title>
+    <title>Point Of Sale - {% block 'title' %} {% endblock 'title' %}</title>
 </head>
 <body>
     {% if request.user.is_authenticated %}
@@ -16,13 +16,19 @@
 
             {% include "layouts/_navbar.html" %}
 
-            <main class="flex-grow p-6 bg-gray-50">
-                {% block content %}
-                {% endblock %}
+            <main class="flex-grow p-6 mt-18 bg-gray-50">
+                {% block 'content' %}
+                {% endblock 'content' %}
             </main>
         </div>
+        {% if messages %}
+            {% for message in messages %}
+                {% include "components/toastNotification.html" with message=message message_type=message.tags %}
+            {% endfor %}
+        {% endif %}
     </div>
     <script src="{% static 'js/index.js' %}"></script>
+    
     {% endif %}
 </body> 
 </html>

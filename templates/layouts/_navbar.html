@@ -1,4 +1,15 @@
-<header class="flex justify-end items-center bg-gray-900 text-white px-6 py-3 shadow-md">
+<header class="fixed w-full flex justify-between items-center h-16 bg-gray-900 text-white px-6 py-3 shadow-md">
+    <!-- Toggle Button (only visible on mobile) -->
+    <div class="md:hidden">
+        <button id="sidebarToggle" class="bg-blue-400 p-2 rounded-md focus:outline-none">
+            <svg class="w-6 h-6 text-gray-900" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12" />
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+        </button>
+    </div>
     <div class="relative">
         <button id="profileBtn" class="flex items-center space-x-2 focus:outline-none">
             <span>{{ request.user.name }}</span>
