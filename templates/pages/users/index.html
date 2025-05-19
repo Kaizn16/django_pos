@@ -3,19 +3,19 @@
 {% block 'content' %}
     <h1 class="text-3xl font-bold">User Management</h1>
     <section class="w-full h-auto p-2 flex flex-col gap-3">
-        <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg dark:bg-gray-900">
             <header class="flex flex-col md:flex-row md:justify-between gap-4 p-3 md:items-center dark:bg-gray-900">
                 <h2 class="text-2xl text-white">Users List</h2>
                 
                 <div class="flex flex-col sm:flex-row sm:items-center gap-2">
-                    <label for="table-search-users" class="sr-only">Search</label>
+                    <label for="search" class="sr-only">Search</label>
                     <div class="relative w-full sm:w-auto">
                         <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                             <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                             </svg>
                         </div>
-                        <input type="text" id="table-search-users" 
+                        <input type="text" id="search" 
                             class="block w-full sm:w-80 p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
                             placeholder="Search for users">
                     </div>
@@ -43,32 +43,153 @@
                         </th>
                     </tr>
                 </thead>
-                <tbody>
-                    {% for user in users %}
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-                        <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
-                            <div class="ps-3">
-                                <div class="text-base font-semibold">{{ user.username }}</div>
-                                <div class="font-normal text-gray-500">{{ user.email }}</div>
-                            </div>  
-                        </th>
-                        <td class="px-6 py-4">
-                            {{ user.role.role_type }}
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center">
-                                <div class="text-base font-semibold">{{ user.last_login }}</div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <a href="{% url 'users:users.edit' user.id %}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit user</a>
-                        </td>
-                    </tr>
-                    {% endfor %}
+                <tbody id="data-table">
+                    <!-- Populate data -->
                 </tbody>
             </table>
+            <div id="pagination-controls" class="mt-2 p-3 flex justify-center gap-2">
+                <!-- Populate pagination -->
+            </div>
         </div>
 
+         <!-- Delete Confirmation Modal -->
+        <div id="deleteModal" class="fixed inset-0 z-50 hidden flex items-center justify-center" style="background: rgba(0, 0, 0, 0.800);">
+            <div class="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md shadow-lg">
+                <h2 class="text-lg font-semibold text-gray-800 dark:text-white">Confirm Deletion</h2>
+                <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">Are you sure you want to delete this user?</p>
+                <form id="deleteUserForm" method="POST" style="display:none;">
+                    {% csrf_token %}
+                </form>
+                <div class="mt-4 flex justify-end gap-2">
+                    <button id="cancelDelete" class="px-4 py-2 bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-white rounded hover:bg-gray-400">Cancel</button>
+                    <button id="confirmDelete" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Delete</button>
+                </div>
+            </div>
+        </div>
 
     </section>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const searchInput = document.getElementById('search');
+            const tableBody = document.getElementById('data-table');
+            const pagination = document.getElementById('pagination-controls');
+
+            let currentPage = 1;
+            let currentSearch = '';
+            let debounceTimer;
+
+            function fetchUsers(page = 1, search = '') {
+                fetch(`/api/users?page=${page}&search=${search}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        renderUsers(data.users);
+                        renderPagination(data.current_page, data.num_pages);
+                    });
+            }
+
+            function renderUsers(users) {
+                tableBody.innerHTML = '';
+                users.forEach(user => {
+
+                    const EDIT_URL = `{% url 'users:users.edit' user.id %}"`;
+                    
+                    const row = `
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                            <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
+                                <div class="ps-3">
+                                    <div class="text-base font-semibold">${user.username}</div>
+                                    <div class="font-normal text-gray-500">${user.email}</div>
+                                </div>
+                            </th>
+                            <td class="px-6 py-4">${user.role}</td>
+                            <td class="px-6 py-4">
+                                ${formatDateTime(user.last_login)}
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex flex-row gap-2 items-center">
+                                    <a href="${EDIT_URL}" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">EDIT</a>
+                                    <button type="button" data-user-id="${user.id}" class="delete-btn font-medium text-red-700 dark:text-red-600 hover:underline">DELETE</button>   
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                    tableBody.innerHTML += row;
+                });
+            }
+
+            function renderPagination(current, total) {
+                pagination.innerHTML = '';
+
+                for (let i = 1; i <= total; i++) {
+                    const btn = document.createElement('button');
+                    btn.className = `px-3 py-1 rounded ${i === current ? 'bg-blue-500 text-white' : 'bg-gray-200 hover:bg-gray-300'}`;
+                    btn.textContent = i;
+                    btn.addEventListener('click', () => {
+                        currentPage = i;
+                        fetchUsers(currentPage, currentSearch);
+                    });
+                    pagination.appendChild(btn);
+                }
+            }
+
+            // Search with debounce timer to avoid spam request
+            searchInput.addEventListener('input', () => {
+                clearTimeout(debounceTimer);
+
+                debounceTimer = setTimeout(() => {
+                    currentSearch = searchInput.value;
+                    currentPage = 1;
+                    fetchUsers(currentPage, currentSearch);
+                }, 600);
+            });
+
+            fetchUsers();
+
+            let selectedUserId = null;
+
+            document.addEventListener('click', function (e) {
+                if (e.target.classList.contains('delete-btn')) {
+                    selectedUserId = e.target.getAttribute('data-user-id');
+                    document.getElementById('deleteModal').classList.remove('hidden');
+                }
+
+                if (e.target.id === 'cancelDelete') {
+                    selectedUserId = null;
+                    document.getElementById('deleteModal').classList.add('hidden');
+                }
+
+                if (e.target.id === 'confirmDelete') {
+                    if (selectedUserId) {
+                        const form = document.getElementById('deleteUserForm');
+                        form.action = `users/delete/${selectedUserId}`;
+                        form.submit();
+                    }
+                    document.getElementById('deleteModal').classList.add('hidden');
+                }
+            });
+        });
+
+        // Formatting Date Time
+        function formatDateTime(dateTimeString) {
+            const date = new Date(dateTimeString);
+            
+            if (isNaN(date)) return '-';
+            
+            const options = {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            
+            const formattedDate = date.toLocaleDateString('en-US', options);
+            const formattedTime = date.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            });
+
+            return `${formattedDate} - ${formattedTime}`;
+        }
+    </script>
 {% endblock 'content' %}
