@@ -7,7 +7,7 @@
     <h1 class="text-3xl font-bold">User Profile</h1>
     <section class="w-full h-auto p-2 flex flex-col gap-3">
         <section class="dark:bg-gray-800 p-5 rounded-2xl">
-            <form method="POST" action="{% url 'users:users.update' user.id %}" enctype="multipart/form-data">
+            <form method="POST" action="{% url 'users:users.update_profile' user.id %}" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="flex flex-col items-start space-y-4 w-full mb-6">
                     <img 
@@ -68,4 +68,26 @@
             </form>
         </section>
     </section>
+    <script>
+        document.getElementById('togglePassword').addEventListener('change', function () {
+            const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirm_password');
+            passwordInput.type = this.checked ? 'text' : 'password';
+            confirmPasswordInput.type = this.checked ? 'text' : 'password';
+        });
+
+        function previewImage(event) {
+            const reader = new FileReader();
+            const imgElement = document.getElementById('profileImagePreview');
+
+            reader.onload = function() {
+                imgElement.src = reader.result;
+            }
+            reader.readAsDataURL(event.target.files[0]);
+        }
+
+        const imagePreview = document.getElementById('profileImagePreview');
+        const defaultImageSrc = imagePreview.src;
+
+    </script>
 {% endblock 'content' %}

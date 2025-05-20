@@ -17,7 +17,7 @@
                         </div>
                         <input type="text" id="search" 
                             class="block w-full sm:w-80 p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
-                            placeholder="Search for users">
+                            placeholder="Search">
                     </div>
 
                     <a href="{% url 'products:product.add' %}" 
@@ -37,9 +37,6 @@
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Selling Price
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Stocks
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Status
@@ -115,7 +112,6 @@
                             </th>
                             <td class="px-6 py-4">₱ ${product.buying_price}</td>
                             <td class="px-6 py-4">₱ ${product.selling_price}</td>
-                            <td class="px-6 py-4">${0}</td>
                             <td class="px-6 py-4">
                                 <div class="font-semibold ${product.status == 1 ? 'text-green-500' : 'text-red-600'}">
                                     ${product.status ? 'Active' : 'Inactive'}

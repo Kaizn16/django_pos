@@ -33,14 +33,17 @@ Installation
     npm install
     pip install -r requirements.txt
 
-4. Apply migrations & Seed Roles Data:
+4. Create a Database
+   Create a new database, for example: django_pos_db (make sure to check the settings.py)
+
+5. Apply migrations & Seed Roles Data:
   python manage.py migrate
   python manage.py seed_roles
 
-5. Create superuser:
+6. Create superuser:
    python manage.py creasuperuser
 
-6. Run the development server & Tailwind for design:
+7. Run the development server & Tailwind for design:
    python manage.py runserver
    npm run tainwild
 

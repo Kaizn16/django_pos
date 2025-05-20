@@ -4,7 +4,6 @@ from point_of_sale.decorators import role_required
 from django.http import HttpResponse
 from django.contrib import messages
 from .models import User, Role
-from django.shortcuts import render
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import update_session_auth_hash
 from django.http import JsonResponse
@@ -23,6 +22,12 @@ def users(request):
 def add_user(request):
     try:
         roles = Role.objects.all()
+
+        # Remove the administrator role if the current authenticated user is not administrator
+        if request.user.role.role_type != 'administrator':
+            roles = roles.exclude(role_type='administrator')
+
+
         if request.method == 'POST':
             fullName = request.POST.get('full_name')
             username = request.POST.get('username')
@@ -88,6 +93,10 @@ def add_user(request):
 @role_required('administrator', 'manager') # Role Based middleware
 def edit_user(request, id=None):
     roles = Role.objects.all()
+
+    # Remove the administrator role if the current authenticated user is not administrator
+    if request.user.role.role_type != 'administrator':
+        roles = roles.exclude(role_type='administrator')
 
     try:
         user = User.objects.get(pk=id)
@@ -260,6 +269,32 @@ def my_profile(request, id=None):
     }
 
     return render(request, 'pages/users/profile.html', data)
+
+@login_required
+def update_profile(request, id=None):
+    roles = Role.objects.all()
+
+    try:
+        user = User.objects.get(pk=id)
+    except User.DoesNotExist:
+        messages.error(request, "User not found.")
+        return redirect('users:users')
+
+    form_data = {
+        'full_name': user.full_name,
+        'username': user.username,
+        'email': user.email,
+        'role': str(user.role.role_id),
+    }
+
+    data = {
+        'roles': roles,
+        'user': user,
+        'form_data': form_data,
+    }
+
+    return render(request, 'pages/users/profile.html', data)
+
 
 @login_required
 def change_password(request, id=None):

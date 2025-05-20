@@ -3,7 +3,6 @@ from django.contrib.auth.decorators import login_required
 from point_of_sale.decorators import role_required
 from django.http import HttpResponse
 from django.contrib import messages
-from django.shortcuts import render
 from django.http import JsonResponse
 from django.core.paginator import Paginator
 from django.db.models import Q

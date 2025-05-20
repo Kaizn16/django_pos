@@ -3,6 +3,184 @@
 {% block 'content' %}
     <h1 class="text-3xl font-bold">Inventory Management</h1>
     <section class="w-full h-auto p-2 flex flex-col gap-3">
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg dark:bg-gray-900">
+            <header class="flex flex-col md:flex-row md:justify-between gap-4 p-3 md:items-center dark:bg-gray-900">
+                <h2 class="text-2xl text-white">Product Stock List</h2>
+                
+                <div class="flex flex-col sm:flex-row sm:items-center gap-2">
+                    <label for="search" class="sr-only">Search</label>
+                    <div class="relative w-full sm:w-auto">
+                        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                            </svg>
+                        </div>
+                        <input type="text" id="search" 
+                            class="block w-full sm:w-80 p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                            placeholder="Search">
+                    </div>
+
+                    <a href="{% url 'inventory:inventory.add_product_stock' %}" 
+                        class="block text-center py-2 px-4 rounded transition bg-blue-400 text-white font-bold hover:bg-blue-500 hover:text-white">
+                        Add Product Stock
+                    </a>
+                </div>
+            </header>
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">
+                            Product
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Stocks
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Action
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="data-table">
+                    <!-- Populate data -->
+                </tbody>
+            </table>
+            <div id="pagination-controls" class="mt-2 p-3 flex justify-center gap-2">
+                <!-- Populate pagination -->
+            </div>
+        </div>
+
+        <!-- Delete Confirmation Modal -->
+        <div id="deleteModal" class="fixed inset-0 z-50 hidden items-center justify-center" style="background: rgba(0, 0, 0, 0.800);">
+            <div class="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md shadow-lg">
+                <h2 class="text-lg font-semibold text-gray-800 dark:text-white">Confirm Deletion</h2>
+                <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">Are you sure you want to delete this stock?</p>
+                <form id="deleteModalForm" method="POST" style="display:none;">
+                    {% csrf_token %}
+                </form>
+                <div class="mt-4 flex justify-end gap-2">
+                    <button id="cancelDelete" class="px-4 py-2 bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-white rounded hover:bg-gray-400">Cancel</button>
+                    <button id="confirmDelete" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Delete</button>
+                </div>
+            </div>
+        </div>
 
     </section>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const searchInput = document.getElementById('search');
+            const tableBody = document.getElementById('data-table');
+            const pagination = document.getElementById('pagination-controls');
+
+            let currentPage = 1;
+            let currentSearch = '';
+            let debounceTimer;
+
+            function fetchStocks(page = 1, search = '') {
+                fetch(`/api/stocks?page=${page}&search=${search}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        renderStocks(data.stocks);
+                        renderPagination(data.current_page, data.num_pages);
+                    });
+            }
+
+            function renderStocks(stocks) {
+                tableBody.innerHTML = '';
+                stocks.forEach(stock => {
+                    
+                    const percent = (stock.quantity / stock.max_quantity) * 100;
+                    let colorClass = 'bg-gray-800'; // Default: < 10%
+
+                    if (percent === 100) {
+                        colorClass = 'bg-green-500';// 100%
+                    } else if (percent >= 50) {
+                        colorClass = 'bg-yellow-400';// 50% to 99.99%
+                    } else if (percent >= 10) {
+                        colorClass = 'bg-red-500';// 10% to 49.99%
+                    } else {
+                        colorClass = 'bg-gray-800';// Below 10%
+                    }
+                    
+                    const STOCK_CHANGE_URL = `inventory/stocks/product/${stock.stock_id}/adjust-stock`;
+                    const STOCK_LOG_URL = `inventory/stocks/${stock.stock_id}/logs`;
+
+                    const row = `
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
+                            <td class="px-6 py-4">${stock.product_name}</td>
+                            <td class="px-6 py-4">
+                                <div class="w-full bg-gray-200 rounded-full h-4 relative">
+                                    <div class="${colorClass} h-4 rounded-full" style="width: ${Math.min(percent, 100)}%"></div>
+                                    <span class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xs font-semibold text-white">
+                                        ${stock.quantity} / ${stock.max_quantity}
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex flex-row gap-2 items-center">
+                                    <a href="${STOCK_CHANGE_URL}" class="flex flex-row items-center gap-1 font-medium text-blue-600 dark:text-blue-500 cursor-pointer hover:text-gray-400"><i class="material-icons">sync_alt</i>Adjust Stock</a>
+                                    <a href="${STOCK_LOG_URL}" class="flex flex-row items-center gap-1 font-medium text-blue-600 dark:text-blue-500 cursor-pointer hover:text-gray-400"><i class="material-icons">history</i>STOCK LOGS</a>
+                                    <button type="button" data-stock-id="${stock.stock_id}" class="delete-btn flex flex-row items-center gap-1 font-medium text-red-700 dark:text-red-600 cursor-pointer hover:text-gray-400"><i class="material-icons">delete</i>DELETE</button>   
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                    tableBody.innerHTML += row;
+                });
+            }
+
+            function renderPagination(current, total) {
+                pagination.innerHTML = '';
+
+                for (let i = 1; i <= total; i++) {
+                    const btn = document.createElement('button');
+                    btn.className = `px-3 py-1 rounded ${i === current ? 'bg-blue-500 text-white' : 'bg-gray-200 hover:bg-gray-300'}`;
+                    btn.textContent = i;
+                    btn.addEventListener('click', () => {
+                        currentPage = i;
+                        fetchStocks(currentPage, currentSearch);
+                    });
+                    pagination.appendChild(btn);
+                }
+            }
+
+            // Search with debounce timer to avoid spam request
+            searchInput.addEventListener('input', () => {
+                clearTimeout(debounceTimer);
+
+                debounceTimer = setTimeout(() => {
+                    currentSearch = searchInput.value;
+                    currentPage = 1;
+                    fetchStocks(currentPage, currentSearch);
+                }, 600);
+            });
+
+            fetchStocks();
+
+            let selectedCategoryId = null;
+
+            document.addEventListener('click', function (e) {
+                if (e.target.classList.contains('delete-btn')) {
+                    selectedCategoryId = e.target.getAttribute('data-stock-id');
+                    document.getElementById('deleteModal').classList.remove('hidden');
+                    document.getElementById('deleteModal').classList.add('flex');
+                }
+
+                if (e.target.id === 'cancelDelete') {
+                    selectedCategoryId = null;
+                    document.getElementById('deleteModal').classList.add('hidden');
+                    document.getElementById('deleteModal').classList.remove('flex');
+                }
+
+                if (e.target.id === 'confirmDelete') {
+                    if (selectedCategoryId) {
+                        const form = document.getElementById('deleteModalForm');
+                        form.action = `inventory/product/stock/delete/${selectedCategoryId}`;
+                        form.submit();
+                    }
+                    document.getElementById('deleteModal').classList.add('hidden');
+                    document.getElementById('deleteModal').classList.remove('flex');
+                }
+            });
+        });
+    </script>
 {% endblock 'content' %}

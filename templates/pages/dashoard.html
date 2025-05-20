@@ -1,8 +1,37 @@
 {% extends "layouts/base.html" %}
+{% load static %}
 {% block 'title' %} Dashboard {% endblock 'title' %}
 {% block 'content' %}
-    <h1 class="text-2xl font-bold">Welcome to the Dashboard</h1>
-    <section class="w-full h-auto p-2 flex flex-col gap-3">
+    <h1 class="text-2xl font-bold mb-6">Welcome to the Dashboard</h1>
+    <section class="w-full h-auto p-2">
         
+        <div class="flex flex-col md:flex-row md:gap-6 gap-4 mb-6">
+            <div class="flex-1 bg-green-400 shadow-md rounded-lg p-6 flex flex-col justify-center items-center">
+                <h2 class="text-lg font-semibold mb-2">Daily Income</h2>
+                <p class="text-3xl font-bold text-dark">₱1,200</p>
+            </div>
+            
+            <div class="flex-1 bg-blue-400 shadow-md rounded-lg p-6 flex flex-col justify-center items-center">
+                <h2 class="text-lg font-semibold mb-2">Monthly Income</h2>
+                <p class="text-3xl font-bold text-dark">₱35,000</p>
+            </div>
+            
+            <div class="flex-1 bg-purple-400 shadow-md rounded-lg p-6 flex flex-col justify-center items-center">
+                <h2 class="text-lg font-semibold mb-2">Yearly Income</h2>
+                <p class="text-3xl font-bold text-dark">₱420,000</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mt-6">
+            <!-- Pie Chart for Top Categories -->
+            <div id="topCategoriesChart" class="w-full h-64 md:h-96"></div>
+
+            <!-- Bar Chart for Most Product Sales -->
+            <div id="productSalesChart" class="w-full h-64 md:h-96"></div>
+        </div>
+
+
     </section>
+    <script src="{% static 'js/apexcharts.js' %}"></script>
+    <script src="{% static 'js/charts.js' %}"></script>
 {% endblock 'content' %}

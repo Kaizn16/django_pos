@@ -4,8 +4,11 @@
   },
   "dependencies": {
     "@tailwindcss/cli": "^4.1.7",
-    "apexcharts": "^3.46.0",
     "material-design-icons": "^3.0.1",
     "tailwindcss": "^4.1.7"
+  },
+  "devDependencies": {
+    "webpack": "^5.99.9",
+    "webpack-cli": "^6.0.1"
   }
 }

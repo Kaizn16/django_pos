@@ -1,5 +1,5 @@
 from django.db import models
-from .models import Product
+from products.models import Product
 from django.core.exceptions import ValidationError
 
 # Create your models here.
