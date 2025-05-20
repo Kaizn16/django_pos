@@ -30,6 +30,7 @@
                 {% include "components/toastNotification.html" with message=message message_type=message.tags %}
             {% endfor %}
         {% endif %}
+        {% include "components/changePasswordModal.html" %}
     </div>
     <script src="{% static 'js/index.js' %}"></script>
     

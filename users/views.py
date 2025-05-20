@@ -6,6 +6,7 @@ from django.contrib import messages
 from .models import User, Role
 from django.shortcuts import render
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth import update_session_auth_hash
 from django.http import JsonResponse
 from django.core.paginator import Paginator
 from django.db.models import Q
@@ -231,3 +232,58 @@ def fetch_users(request):
         })
     except Exception as e:
         return JsonResponse({'error': 'An error occurred while fetching users.'}, status=500)
+    
+
+# User Profile
+@login_required
+def my_profile(request, id=None):
+    try:
+        user = User.objects.get(pk=id)
+    except User.DoesNotExist:
+        messages.error(request, "User not found.")
+        # this will go back to previous page, the second parameter is incase if the previous page does not exist
+        return redirect(request.META.get('HTTP_REFERER', 'login:dashboard'))
+        
+    roles = Role.objects.all()
+
+    form_data = {
+        'full_name': user.full_name,
+        'username': user.username,
+        'email': user.email,
+        'role': str(user.role.role_id),
+    }
+
+    data = {
+        'roles': roles,
+        'user': user,
+        'form_data': form_data
+    }
+
+    return render(request, 'pages/users/profile.html', data)
+
+@login_required
+def change_password(request, id=None):
+    user = get_object_or_404(User, pk=id)
+
+    if request.method == 'POST':
+        current_password = request.POST.get('current_password')
+        new_password = request.POST.get('new_password')
+        confirm_new_password = request.POST.get('confirm_new_password')
+
+        if not user.check_password(current_password):
+            messages.error(request, "Current password is incorrect.")
+            return redirect(request.META.get('HTTP_REFERER', '/'))
+
+        if new_password != confirm_new_password:
+            messages.error(request, "New password and confirmation do not match.")
+            return redirect(request.META.get('HTTP_REFERER', '/'))
+
+        user.set_password(new_password)
+        user.save()
+
+        update_session_auth_hash(request, user)
+
+        messages.success(request, "Password changed successfully.")
+        return redirect('login:dashboard')
+
+    return redirect(request.META.get('HTTP_REFERER', '/'))

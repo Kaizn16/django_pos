@@ -10,4 +10,6 @@ urlpatterns = [
     path('pos/users/update/<int:id>', views.update_user, name='users.update'),
     path('pos/users/delete/<int:id>', views.delete_user, name='users.delete'),
     path('api/users', views.fetch_users, name='users.fetch_users'),
+    path('pos/user/my-profile/<int:id>', views.my_profile, name='users.myprofile'),
+    path('pos/user/change-password/<int:id>', views.change_password, name='users.changepassword')
 ]

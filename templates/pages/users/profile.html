@@ -1,0 +1,71 @@
+{% extends "layouts/base.html" %}
+{% block 'title' %} 
+    My Profile
+{% endblock 'title' %}
+
+{% block 'content' %}
+    <h1 class="text-3xl font-bold">User Profile</h1>
+    <section class="w-full h-auto p-2 flex flex-col gap-3">
+        <section class="dark:bg-gray-800 p-5 rounded-2xl">
+            <form method="POST" action="{% url 'users:users.update' user.id %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="flex flex-col items-start space-y-4 w-full mb-6">
+                    <img 
+                        id="profileImagePreview" 
+                        {% load static %}
+                        src="{% if user.profile %}{{ user.profile.url }}{% else %}{% static 'images/default-profile.png' %}{% endif %}" alt="Profile Image"
+                        alt="Profile Preview" 
+                        class="bg-white" style="max-width: 128px; padding: 4px;clip-path: circle();">
+                    <div>
+                        <label for="profile" class="block text-sm font-medium text-white mb-1">
+                            Profile Image
+                        </label>
+                        <input 
+                            type="file" 
+                            accept="image/*" 
+                            name="profile" 
+                            id="profile" 
+                            onchange="previewImage(event)" 
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-max p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    </div>
+                </div>
+
+                <div class="grid gap-6 mb-6 md:grid-cols-2">
+                    <div>
+                        <label for="full_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Full name</label>
+                        <input type="text" id="full_name" name="full_name" value="{{ form_data.full_name|default:'' }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+                    </div>
+                     <div>
+                        <label for="username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Username</label>
+                        <input type="text" id="username" name="username" value="{{ form_data.username|default:'' }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+                    </div>
+                </div>
+                
+                <div class="grid gap-6 mb-6 md:grid-cols-2">
+                    <div class="mb-6">
+                        <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email address</label>
+                        <input type="email" id="email" name="email" value="{{ form_data.email|default:'' }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+                    </div> 
+                    
+                    <div class="mb-6">
+                        <label for="role" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Role</label>
+                        <select id="role" name="role"
+                            class="bg-gray-50 border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" {% if user.role.role_type != "administrator" %} style="pointer-events: none;" {% endif %} required>
+                            <option selected>Select Role</option>
+                            {% for role in roles %}
+                            <option value="{{ role.role_id }}" {% if form_data.role == role.role_id|stringformat:"s" %} selected {% endif %}>{{ role.role_type }}</option>
+                            {% endfor %}
+                        </select>
+                    </div> 
+                </div>
+                
+                <div class="flex flex-row items-center justify-end gap-3">
+                    <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        Save
+                    </button>
+                    <a href="javascript:history.back()" class="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">Cancel</a>
+                </div>
+            </form>
+        </section>
+    </section>
+{% endblock 'content' %}
