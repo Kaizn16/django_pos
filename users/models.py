@@ -34,10 +34,10 @@ class CustomUserManager(UserManager):
         user.save(using=self.db)
         return user
 
-    def create_user(self, username=None, email=None, full_name=None, password=None, role=None, **extra_fields):
+    def create_user(self, username=None, email=None, full_name=None, password=None, role=None, profile=None, **extra_fields):
         extra_fields.setdefault('is_staff', False)
         extra_fields.setdefault('is_superuser', False)
-        return self._create_user(username, email, full_name, password, role, **extra_fields)
+        return self._create_user(username, email, full_name, password, role, profile, **extra_fields)
 
     def create_superuser(self, username, email, full_name, password, **extra_fields):
         extra_fields.setdefault('is_staff', True)
@@ -50,6 +50,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     full_name = models.CharField(max_length=255, blank=False, default='')
     password = models.CharField(max_length=255, blank=False)
     role = models.ForeignKey(Role, on_delete=models.CASCADE, null=True, default='1', blank=False)
+    profile = models.ImageField(null=True, default='', blank=True, upload_to='profiles/')
     
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)

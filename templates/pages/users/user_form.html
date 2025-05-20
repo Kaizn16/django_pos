@@ -1,5 +1,4 @@
 {% extends "layouts/base.html" %}
-
 {% block 'title' %} 
     {% if user %} Edit User {% else %} Add User {% endif%}
 {% endblock 'title' %}
@@ -8,8 +7,29 @@
     <h1 class="text-3xl font-bold">User Management</h1>
     <section class="w-full h-auto p-2 flex flex-col gap-3">
         <section class="dark:bg-gray-800 p-5 rounded-2xl">
-            <form method="POST" action="{% if user %}{% url 'users:users.update' user.id %}{% else %}{% url 'users:users.add' %}{% endif %}">
+            <form method="POST" action="{% if user %}{% url 'users:users.update' user.id %}{% else %}{% url 'users:users.add' %}{% endif %}" enctype="multipart/form-data">
                 {% csrf_token %}
+                <div class="flex flex-col items-start space-y-4 w-full mb-6">
+                    <img 
+                        id="profileImagePreview" 
+                        {% load static %}
+                        src="{% if user.profile %}{{ user.profile.url }}{% else %}{% static 'images/default-profile.png' %}{% endif %}" alt="Profile Image"
+                        alt="Profile Preview" 
+                        class="bg-white" style="max-width: 128px; padding: 4px;clip-path: circle();">
+                    <div>
+                        <label for="profile" class="block text-sm font-medium text-gray-700 mb-1">
+                            Profile Image
+                        </label>
+                        <input 
+                            type="file" 
+                            accept="image/*" 
+                            name="profile" 
+                            id="profile" 
+                            onchange="previewImage(event)" 
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-max p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    </div>
+                </div>
+
                 <div class="grid gap-6 mb-6 md:grid-cols-2">
                     <div>
                         <label for="full_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Full name</label>
@@ -67,5 +87,19 @@
             passwordInput.type = this.checked ? 'text' : 'password';
             confirmPasswordInput.type = this.checked ? 'text' : 'password';
         });
+
+        function previewImage(event) {
+            const reader = new FileReader();
+            const imgElement = document.getElementById('profileImagePreview');
+
+            reader.onload = function() {
+                imgElement.src = reader.result;
+            }
+            reader.readAsDataURL(event.target.files[0]);
+        }
+
+        const imagePreview = document.getElementById('profileImagePreview');
+        const defaultImageSrc = imagePreview.src;
+
     </script>
 {% endblock 'content' %}

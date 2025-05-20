@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+import os
 from pathlib import Path
 import pymysql
 pymysql.install_as_MySQLdb()
@@ -131,12 +132,14 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
-# MEDIA_ROOT =  os.path.join(BASE_DIR, 'media')
-# MEDIA_URL = '/media/'
 
 LOGIN_REDIRECT_URL = '/pos/dashboard'
 LOGIN_URL = '/login'
 LOGOUT_REDIRECT_URL = '/'
+
+MEDIA_URL = '/media/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

@@ -33,7 +33,7 @@
                             Name
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Position
+                            Role
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Last Login
@@ -53,7 +53,7 @@
         </div>
 
          <!-- Delete Confirmation Modal -->
-        <div id="deleteModal" class="fixed inset-0 z-50 hidden flex items-center justify-center" style="background: rgba(0, 0, 0, 0.800);">
+        <div id="deleteModal" class="fixed inset-0 z-50 hidden items-center justify-center" style="background: rgba(0, 0, 0, 0.800);">
             <div class="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md shadow-lg">
                 <h2 class="text-lg font-semibold text-gray-800 dark:text-white">Confirm Deletion</h2>
                 <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">Are you sure you want to delete this user?</p>
@@ -151,11 +151,13 @@
                 if (e.target.classList.contains('delete-btn')) {
                     selectedUserId = e.target.getAttribute('data-user-id');
                     document.getElementById('deleteModal').classList.remove('hidden');
+                    document.getElementById('deleteModal').classList.add('flex');
                 }
 
                 if (e.target.id === 'cancelDelete') {
                     selectedUserId = null;
                     document.getElementById('deleteModal').classList.add('hidden');
+                    document.getElementById('deleteModal').classList.remove('flex');
                 }
 
                 if (e.target.id === 'confirmDelete') {
@@ -165,6 +167,7 @@
                         form.submit();
                     }
                     document.getElementById('deleteModal').classList.add('hidden');
+                    document.getElementById('deleteModal').classList.remove('flex');
                 }
             });
         });

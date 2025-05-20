@@ -26,6 +26,7 @@ def add_user(request):
             role_id = request.POST.get('role')
             password = request.POST.get('password')
             confirm_password = request.POST.get('confirm_password')
+            profile = request.FILES.get('profile')
 
             # Pre-fill form data for redisplay
             form_data = {
@@ -50,13 +51,18 @@ def add_user(request):
                 validations = True
 
             if not validations:
-                User.objects.create(
-                    full_name=fullName,
-                    username=username,
-                    email=email,
-                    role=Role.objects.get(pk=role_id),
-                    password=make_password(password)
-                )
+                user_data = {
+                    'full_name': fullName,
+                    'username': username,
+                    'email': email,
+                    'role': Role.objects.get(pk=role_id),
+                    'password': make_password(password),
+                }
+
+                if profile:
+                    user_data['profile'] = profile
+
+                User.objects.create(**user_data)
                 messages.success(request, "User successfully created!")
                 return redirect('users:users')
 
@@ -110,6 +116,7 @@ def update_user(request, id=None):
             role_id = request.POST.get('role')
             password = request.POST.get('password')
             confirm_password = request.POST.get('confirm_password')
+            profile = request.FILES.get('profile')  
 
             user.full_name = full_name
             user.role = Role.objects.get(pk=role_id)
@@ -137,6 +144,9 @@ def update_user(request, id=None):
                         'form_data': form_data,
                         'roles': roles
                     })
+                
+            if profile:
+                user.profile = profile
 
             user.save()
             messages.success(request, "User updated successfully.")
