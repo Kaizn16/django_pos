@@ -7,7 +7,7 @@
     <h1 class="text-3xl font-bold">Product Management</h1>
     <section class="w-full h-auto p-2 flex flex-col gap-3">
         <section class="dark:bg-gray-800 p-5 rounded-2xl">
-            <form method="POST" action="{% if product %}{% url 'products:products.update' product.id %}{% else %}{% url 'products:products.add' %}{% endif %}" enctype="multipart/form-data">
+            <form method="POST" action="{% if product %}{% url 'products:product.update' product.id %}{% else %}{% url 'products:product.add' %}{% endif %}" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="flex flex-col items-start space-y-4 w-full mb-6">
                     <img 

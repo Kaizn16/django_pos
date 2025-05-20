@@ -4,22 +4,23 @@ from point_of_sale.decorators import role_required
 from django.http import HttpResponse
 from django.contrib import messages
 from django.shortcuts import render
-from django.contrib.auth.hashers import make_password
 from django.http import JsonResponse
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.db import IntegrityError
 from .models import Product, Category
-# Create your views here.
 
+
+# Create your views here.
+# Products Module
 
 @login_required
-@role_required('administrator', 'manager') # Role Based middleware
+@role_required('administrator', 'manager')
 def products(request):
     return render(request, 'pages/products/index.html')
 
 @login_required
-@role_required('administrator', 'manager') # Role Based middleware
+@role_required('administrator', 'manager')
 def add_product(request):
     try:
         categories = Category.objects.all()
@@ -81,7 +82,7 @@ def add_product(request):
 
             return render(request, 'pages/products/product_form.html', {
                 'categories': categories,
-                'user': None,
+                'product': None,
                 'form_data': form_data
             })
 
@@ -95,7 +96,7 @@ def add_product(request):
 
 
 @login_required
-@role_required('administrator', 'manager') # Role Based middleware
+@role_required('administrator', 'manager')
 def edit_product(request, id=None):
     categories = Category.objects.all()
 
@@ -124,7 +125,7 @@ def edit_product(request, id=None):
     return render(request, 'pages/products/product_form.html', data)
 
 @login_required
-@role_required('administrator', 'manager') # Role Based middleware
+@role_required('administrator', 'manager')
 def update_product(request, id=None):
     product = get_object_or_404(Product, pk=id)
     if request.method == 'POST':
@@ -182,7 +183,7 @@ def update_product(request, id=None):
     })
 
 @login_required
-@role_required('administrator', 'manager') # Role Based middleware
+@role_required('administrator', 'manager')
 def delete_product(request, id=None):
     if request.method == 'POST':
         
@@ -236,3 +237,146 @@ def fetch_products(request):
         })
     except Exception as e:
         return JsonResponse({'error': 'An error occurred while fetching products.'}, status=500)
+    
+
+
+# Categories Module
+
+@login_required
+@role_required('administrator', 'manager')
+def categories(request):
+    try:
+        return render(request, 'pages/products/categories/index.html')
+    except Exception as e:
+        messages.error(request, f"An error occurred: {str(e)}") 
+
+@login_required
+@role_required('administrator', 'manager')
+def add_category(request):
+    try:
+        if request.method == 'POST':
+            category_name = request.POST.get('category_name')
+
+            # Pre-fill form data for redisplay if something went wrong
+            form_data = {'category_name': category_name}
+
+            validations = False
+
+            if Category.objects.filter(category_name=category_name).exists():
+                messages.error(request, "Category already exists!")
+                validations = True
+  
+            if not validations:
+                category_data = {'category_name': category_name,}
+
+                Category.objects.create(**category_data)
+                messages.success(request, "Category successfully created!")
+                return redirect('products:categories')
+
+            return render(request, 'pages/products/categories/category_form.html', {
+                'category': None,
+                'form_data': form_data
+            })
+
+        return render(request, 'pages/products/categories/category_form.html')
+    except Exception as e:
+        messages.error(request, f"An error occurred: {str(e)}") 
+
+
+@login_required
+@role_required('administrator', 'manager')
+def edit_category(request, id=None):
+    try:
+        category = Category.objects.get(pk=id)
+    except Category.DoesNotExist:
+        messages.error(request, "Category not found.")
+        return redirect('products:products')
+
+    form_data = {'category_name': category.category_name,}
+
+    data = {
+        'category': category,
+        'form_data': form_data,
+    }
+
+    return render(request, 'pages/products/categories/category_form.html', data)
+
+
+@login_required
+@role_required('administrator', 'manager')
+def update_category(request, id=None):
+    category = get_object_or_404(Category, pk=id)
+    if request.method == 'POST':
+        try:
+            category_name = request.POST.get('category_name')
+    
+            if category_name != category.category_name:
+                category.category_name = category_name
+            
+            category.save()
+            messages.success(request, "Category updated successfully.")
+            return redirect('products:categories')
+
+        except IntegrityError as e:
+            messages.error(request, "Category name already exists.")
+        except Exception as e:
+            messages.error(request, f"An error occurred: {str(e)}")
+
+    form_data = {'category_name': category.category_name}
+
+    return render(request, 'pages/products/categories/category_form.html', {
+        'category': category,
+        'form_data': form_data,
+    })
+
+@login_required
+@role_required('administrator', 'manager')
+def delete_category(request, id=None):
+    if request.method == 'POST':
+        
+        try:
+            category = Category.objects.get(pk=id)
+        except Category.DoesNotExist:
+            messages.error(request, "Category not found.")
+            return redirect('products:categories')
+
+        category.delete()
+        messages.success(request, "Category deleted successfully.")
+        return redirect('products:categories')
+
+    messages.error(request, "Invalid request method.")
+    return redirect('products:categories')
+
+def fetch_categories(request):
+    try:
+        search_query = request.GET.get('search', '')
+        page_number = request.GET.get('page', 1)
+        per_page = 10
+
+        categories = Category.objects.all()
+
+        if search_query:
+            categories = categories.filter(
+                Q(category_name__icontains=search_query)
+            )
+
+        paginator = Paginator(categories, per_page)
+        page = paginator.get_page(page_number)
+
+        data = []
+        for category in page:
+            data.append({
+                'category_id': category.category_id,
+                'category_name': category.category_name,
+            })
+
+        return JsonResponse({
+            'categories': data,
+            'has_next': page.has_next(),
+            'has_previous': page.has_previous(),
+            'num_pages': paginator.num_pages,
+            'current_page': page.number,
+        })
+
+    except Exception as e:
+        return JsonResponse({'error': 'An error occurred while fetching categories.'}, status=500)
