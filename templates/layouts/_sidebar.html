@@ -27,6 +27,13 @@
                 Users   
                 </a>
             </li>
+            <li>
+                <a href="{% url 'products:products' %}" 
+                class="block py-2 px-4 rounded transition 
+                {% if request.resolver_match.url_name == 'products' or request.resolver_match.url_name == 'products.add' or request.resolver_match.url_name == 'products.edit' %}bg-blue-400 text-white font-bold{% else %}hover:bg-blue-400 hover:text-gray-900{% endif %}">
+                Products   
+                </a>
+            </li>
         </ul>
     </nav>
 </aside>

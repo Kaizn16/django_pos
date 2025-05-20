@@ -1,0 +1,101 @@
+{% extends "layouts/base.html" %}
+{% block 'title' %} 
+    {% if product %} Edit Product {% else %} Add Product {% endif%}
+{% endblock 'title' %}
+
+{% block 'content' %}
+    <h1 class="text-3xl font-bold">Product Management</h1>
+    <section class="w-full h-auto p-2 flex flex-col gap-3">
+        <section class="dark:bg-gray-800 p-5 rounded-2xl">
+            <form method="POST" action="{% if product %}{% url 'products:products.update' product.id %}{% else %}{% url 'products:products.add' %}{% endif %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="flex flex-col items-start space-y-4 w-full mb-6">
+                    <img 
+                        id="productImagePreview" 
+                        {% load static %}
+                        src="{% if product.product_image %}{{ product.product_image.url }}{% else %}{% static 'images/default-product.png' %}{% endif %}" alt="Product Image"
+                        alt="Product Preview" 
+                        class="bg-white" style="max-width: 128px; padding: 4px;clip-path: circle();">
+                    <div>
+                        <label for="Product" class="block text-sm font-medium text-white mb-1">
+                            Product Image
+                        </label>
+                        <input 
+                            type="file" 
+                            accept="image/*" 
+                            name="product_image"
+                            id="product" 
+                            onchange="previewImage(event)" 
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-max p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    </div>
+                </div>
+
+                <div class="grid gap-6 mb-6 md:grid-cols-2">
+                    <div>
+                        <label for="product_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product name</label>
+                        <input type="text" id="product_name" name="product_name" value="{{ form_data.product_name|default:'' }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+                    </div>
+                    <div class="mb-6">
+                        <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category</label>
+                        <select id="category" name="category" class="bg-gray-50 border border-gray-300 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option selected>Select Category</option>
+                            {% for category in categories %}
+                            <option value="{{ category.category_id }}" {% if form_data.category == category.category_id|stringformat:"s" %} selected {% endif %}>{{ category.category_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="mb-6">
+                    <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
+                    <textarea type="text" id="description" name="description" value="{{ form_data.description|default:'' }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"></textarea>
+                </div>
+                
+                <div class="grid gap-6 mb-6 md:grid-cols-2">
+                    <div class="mb-6">
+                        <label for="buying_price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Buying Price</label>
+                        <input type="number" id="buying_price" name="buying_price" value="{{ form_data.buying_price|default:'' }}" step="0.01" min="0" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label for="selling_price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Selling Price</label>
+                        <input type="number" id="selling_price" name="selling_price" value="{{ form_data.selling_price|default:'' }}" step="0.01" min="0" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+                    </div>  
+                </div>
+
+                <div class="grid gap-6 mb-6 md:grid-cols-2">
+                    <div class="mb-6">
+                        <label for="sku" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">SKU (OPTIONAL)</label>
+                        <input type="text" id="sku" name="sku" value="{{ form_data.sku|default:'' }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label for="barcode" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Barcode (OPTIONAL)</label>
+                        <input type="text" id="barcode" name="barcode" value="{{ form_data.barcode|default:'' }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
+                    </div>  
+                </div>
+                
+                <div class="flex flex-row items-center justify-end gap-3">
+                    <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        {% if product %} Save {% else %} Submit {% endif%}
+                    </button>
+                    <a href="{% url 'products:products' %}" class="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">Cancel</a>
+                </div>
+            </form>
+        </section>
+    </section>
+    <script>
+        function previewImage(event) {
+            const reader = new FileReader();
+            const imgElement = document.getElementById('productImagePreview');
+
+            reader.onload = function() {
+                imgElement.src = reader.result;
+            }
+            reader.readAsDataURL(event.target.files[0]);
+        }
+
+        const imagePreview = document.getElementById('productImagePreview');
+        const defaultImageSrc = imagePreview.src;
+    </script>
+{% endblock 'content' %}

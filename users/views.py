@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
+from point_of_sale.decorators import role_required
 from django.http import HttpResponse
 from django.contrib import messages
 from .models import User, Role
@@ -12,10 +13,12 @@ from django.db import IntegrityError
 # Create your views here.
 
 @login_required
+@role_required('administrator', 'manager') # Role Based middleware
 def users(request):
     return render(request, 'pages/users/index.html')
     
 @login_required
+@role_required('administrator', 'manager') # Role Based middleware
 def add_user(request):
     try:
         roles = Role.objects.all()
@@ -81,6 +84,7 @@ def add_user(request):
         return HttpResponse(f'Error occurred during adding user. {e}')
 
 @login_required
+@role_required('administrator', 'manager') # Role Based middleware
 def edit_user(request, id=None):
     roles = Role.objects.all()
 
@@ -106,6 +110,7 @@ def edit_user(request, id=None):
     return render(request, 'pages/users/user_form.html', data)
 
 @login_required
+@role_required('administrator', 'manager') # Role Based middleware
 def update_user(request, id=None):
     user = get_object_or_404(User, pk=id)
     if request.method == 'POST':
@@ -171,6 +176,7 @@ def update_user(request, id=None):
     })
 
 @login_required
+@role_required('administrator', 'manager') # Role Based middleware
 def delete_user(request, id=None):
     if request.method == 'POST':
         
@@ -208,10 +214,12 @@ def fetch_users(request):
         for user in page:
             data.append({
                 'id': user.id,
+                'full_name': user.full_name,
                 'username': user.username,
                 'email': user.email,
                 'last_login': user.last_login.strftime('%Y-%m-%d %H:%M:%S') if user.last_login else '-',
-                'role': getattr(user.role, 'role_type', 'N/A')
+                'role': getattr(user.role, 'role_type', 'N/A'),
+                'profile': user.profile.url if user.profile else None,
             })
 
         return JsonResponse({
