@@ -15,30 +15,42 @@
         <ul class="space-y-4 px-6">
             <li>
                 <a href="{% url 'login:dashboard' %}" 
-                class="block py-2 px-4 rounded transition 
+                class="flex items-center gap-2 py-2 px-4 rounded transition 
                 {% if request.resolver_match.url_name == 'dashboard' %}bg-blue-400 text-white font-bold{% else %}hover:bg-blue-400 hover:text-gray-900{% endif %}">
-                Dashboard   
-                </a>
-            </li>
-            <li>
-                <a href="{% url 'users:users' %}" 
-                class="block py-2 px-4 rounded transition 
-                {% if request.resolver_match.url_name == 'users' or request.resolver_match.url_name == 'users.add' or request.resolver_match.url_name == 'users.edit' %}bg-blue-400 text-white font-bold{% else %}hover:bg-blue-400 hover:text-gray-900{% endif %}">
-                Users   
+                <i class="material-icons">dashboard</i>
+                Dashboard
                 </a>
             </li>
             <li>
                 <a href="{% url 'products:products' %}" 
-                class="block py-2 px-4 rounded transition 
+                class="flex items-center gap-2 py-2 px-4 rounded transition
                 {% if request.resolver_match.url_name == 'products' or request.resolver_match.url_name == 'products.add' or request.resolver_match.url_name == 'products.edit' %}bg-blue-400 text-white font-bold{% else %}hover:bg-blue-400 hover:text-gray-900{% endif %}">
+                <i class="material-icons">view_in_ar</i>
                 Products   
                 </a>
             </li>
             <li>
                 <a href="{% url 'products:categories' %}" 
-                class="block py-2 px-4 rounded transition 
+                class="flex items-center gap-2 py-2 px-4 rounded transition
                 {% if request.resolver_match.url_name == 'categories' or request.resolver_match.url_name == 'category.add' or request.resolver_match.url_name == 'category.edit' %}bg-blue-400 text-white font-bold{% else %}hover:bg-blue-400 hover:text-gray-900{% endif %}">
+                <i class="material-icons">category</i>
                 Categories   
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'inventory:inventory' %}" 
+                class="flex items-center gap-2 py-2 px-4 rounded transition
+                {% if request.resolver_match.url_name == 'inventory' %}bg-blue-400 text-white font-bold{% else %}hover:bg-blue-400 hover:text-gray-900{% endif %}">
+                <i class="material-icons">warehouse</i>
+                Inventory
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'users:users' %}" 
+                class="flex items-center gap-2 py-2 px-4 rounded transition
+                {% if request.resolver_match.url_name == 'users' or request.resolver_match.url_name == 'users.add' or request.resolver_match.url_name == 'users.edit' %}bg-blue-400 text-white font-bold{% else %}hover:bg-blue-400 hover:text-gray-900{% endif %}">
+                <i class="material-icons">people</i>
+                Users   
                 </a>
             </li>
         </ul>

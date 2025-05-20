@@ -4,9 +4,11 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="{% static 'css/output.css' %}" />
     <meta name="csrf-token" content="{{ csrf_token }}">
     <link rel="icon" type="image/x-icon" href="{% static 'images/App-Logo.png' %}">
+    <link rel="stylesheet" href="{% static 'css/output.css' %}" />
+    <link href="{% static 'css/material-icons.css' %}" rel="stylesheet">
+    <link href="{% static 'icons/more-material-icons.css' %}" rel="stylesheet">
     <title>{% if request.user.is_authenticated %} {{ request.user.role.role_type }} {% endif %} - Point Of Sale - {% block 'title' %} {% endblock 'title' %}</title>
 </head>
 <body>

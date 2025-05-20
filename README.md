@@ -31,6 +31,7 @@ Installation
 
 3. Install dependencies:
     npm install
+    pip install -r requirements.txt
 
 4. Apply migrations & Seed Roles Data:
   python manage.py migrate
