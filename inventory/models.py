@@ -1,14 +1,18 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from products.models import Product
+from warehouse.models import Warehouse
 
 class Stock(models.Model):
     class Meta:
         db_table = 'tbl_stocks'
+        unique_together = ('product', 'warehouse')
 
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=0)
     max_quantity = models.IntegerField(default=0)
+    opening_stock = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -26,6 +30,14 @@ class Stock(models.Model):
 
     def __str__(self):
         return f"{self.product.name} - {self.quantity} in stock"
+    
+    @property
+    def display_stock(self):
+        return self.opening_stock
+    
+    @property
+    def is_low_stock(self):
+        return self.quantity <= self.product.low_stock_threshold
 
 class StockLog(models.Model):
     STOCK_TYPE_CHOICES = [
@@ -39,6 +51,7 @@ class StockLog(models.Model):
         db_table = 'tbl_stock_logs'
 
     stock = models.ForeignKey(Stock, on_delete=models.CASCADE)
+    warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE)
     change = models.IntegerField()
     type = models.CharField(max_length=7, choices=STOCK_TYPE_CHOICES)
     reason = models.CharField(max_length=255, blank=True, null=True)

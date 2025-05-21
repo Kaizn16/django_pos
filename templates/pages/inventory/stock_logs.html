@@ -8,17 +8,6 @@
                 <h2 class="text-2xl text-white">{{ product.product_name }} - Stock Logs</h2>
                 <input type="hidden" id="stock_id" value="{{ stockLog.stock_id }}">
                 <div class="flex flex-col sm:flex-row sm:items-center gap-2">
-                    <label for="search" class="sr-only">Search</label>
-                    <div class="relative w-full sm:w-auto">
-                        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                            </svg>
-                        </div>
-                        <input type="text" id="search" 
-                            class="block w-full sm:w-80 p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
-                            placeholder="Search">
-                    </div>
                     <a href="{% url 'inventory:inventory' %}" 
                         class="block text-center py-2 px-4 rounded transition bg-blue-400 text-white font-bold hover:bg-blue-500 hover:text-white">
                         Back

@@ -23,6 +23,7 @@ from django.conf import settings
 urlpatterns = [
     path('', include('login.urls', namespace='login')),
     path('', include('users.urls', namespace='users')),
+    path('', include('sales.urls', namespace='sales')),
     path('', include('products.urls', namespace='products')),
     path('', include('inventory.urls', namespace='inventory'))
 ]

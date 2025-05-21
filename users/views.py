@@ -280,6 +280,35 @@ def update_profile(request, id=None):
         messages.error(request, "User not found.")
         return redirect('users:users')
 
+    if request.method == 'POST':
+        try:
+            full_name = request.POST.get('full_name')
+            username = request.POST.get('username')
+            email = request.POST.get('email')
+            role_id = request.POST.get('role')
+            profile = request.FILES.get('profile')  
+
+            user.full_name = full_name
+            user.role = Role.objects.get(pk=role_id)
+
+            if username != user.username:
+                user.username = username
+
+            if email != user.email:
+                user.email = email
+                
+            if profile:
+                user.profile = profile
+
+            user.save()
+            messages.success(request, "Profile updated successfully.")
+            return redirect('users:users')
+
+        except IntegrityError as e:
+            messages.error(request, "Username or email already exists.")
+        except Exception as e:
+            messages.error(request, f"An error occurred: {str(e)}")
+
     form_data = {
         'full_name': user.full_name,
         'username': user.username,

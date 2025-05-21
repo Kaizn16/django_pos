@@ -2,10 +2,10 @@
 <aside id="mobileSidebar"
     class="fixed inset-y-0 left-0 w-64 bg-gray-800 text-white flex flex-col transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out z-60 md:z-auto">
     <div class="p-6 font-bold text-xl border-b border-gray-700 flex justify-between items-center">
-        <div class="flex items-center justify-center gap-2">
+        <a href="{% url 'login:dashboard' %}" class="flex items-center justify-center gap-2">
             <img src="{% static 'images/App-Logo.png' %}" alt="App Logo" class="rounded-full" style="max-width: 42px;">
             <strong>P.O.S</strong>
-        </div>
+        </a>
         <!-- Close Button (Mobile only) -->
         <button id="closeSidebar" class="md:hidden text-white focus:outline-none">
             ✕
@@ -19,6 +19,14 @@
                 {% if request.resolver_match.url_name == 'dashboard' %}bg-blue-400 text-white font-bold{% else %}hover:bg-blue-400 hover:text-gray-900{% endif %}">
                 <i class="material-icons">dashboard</i>
                 Dashboard
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'sales:sales' %}" 
+                class="flex items-center gap-2 py-2 px-4 rounded transition
+                {% if request.resolver_match.url_name == 'sales' %}bg-blue-400 text-white font-bold{% else %}hover:bg-blue-400 hover:text-gray-900{% endif %}">
+                <i class="material-icons">point_of_sale</i>
+                Sales   
                 </a>
             </li>
             <li>

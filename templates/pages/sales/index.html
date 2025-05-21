@@ -1,0 +1,304 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+{% block 'title' %} Sales {% endblock 'title' %}
+{% block 'content' %}
+<section class="w-full h-auto p-2 flex flex-col gap-3">
+    <div class="flex lg:flex-row flex-col-reverse shadow-lg bg-white">
+        <div class="w-full lg:w-3/5 min-h-screen shadow-lg">
+          <!-- header -->
+          <div class="flex flex-row justify-between items-center px-5 mt-5">
+            <div class="text-gray-800">
+              <div class="font-bold text-xl">POS</div>
+              <span class="text-xs">FCU-CCS</span>
+            </div>
+          </div>
+          <!-- end header -->
+        
+          <div class="mt-5 px-5">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+              <!-- Scrollable category list -->
+              <div class="flex overflow-x-auto w-80 gap-2 sm:gap-4 scrollbar-thin scrollbar-thumb-gray-300">
+                <span class="whitespace-nowrap px-5 py-1 dark:bg-gray-500 rounded-2xl text-white text-sm mr-1">
+                  All items
+                </span>
+                <span class="whitespace-nowrap px-5 py-1 rounded-2xl text-sm font-semibold mr-1">
+                  Beverages
+                </span>
+                <span class="whitespace-nowrap px-5 py-1 rounded-2xl text-sm font-semibold mr-1">
+                  Snacks
+                </span>
+                 <span class="whitespace-nowrap px-5 py-1 rounded-2xl text-sm font-semibold mr-1">
+                  Snacks
+                </span>
+                 <span class="whitespace-nowrap px-5 py-1 rounded-2xl text-sm font-semibold mr-1">
+                  Snacks
+                </span>
+                <!-- Add more categories as needed -->
+              </div>
+
+              <!-- Search input -->
+              <div class="relative w-full sm:w-80">
+                <label for="search" class="sr-only">Search</label>
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                  <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 20 20" aria-hidden="true">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                  </svg>
+                </div>
+                <input type="text" id="search"
+                  class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="Search">
+              </div>
+            </div>
+          </div>
+
+          <!-- products -->
+          <div class="grid grid-cols-3 gap-4 px-5 mt-5 overflow-y-auto h-3/4">
+            <div class="px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between">
+              <div>
+                <div class="font-bold text-gray-800">Griled corn</div>
+                <span class="font-light text-sm text-gray-400">150g</span>
+              </div>
+              <div class="flex flex-row justify-between items-center">
+                <span class="self-end font-bold text-lg dark:text-gray-500">₱1.75</span>
+                <img src="{% static 'images/default-product.png' %}" class=" h-14 w-14 object-cover rounded-md" alt="">
+              </div>
+            </div>
+            <div class="px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between">
+              <div>
+                <div class="font-bold text-gray-800">Ranch Burger</div>
+                <span class="font-light text-sm text-gray-400">150g</span>
+              </div>
+              <div class="flex flex-row justify-between items-center">
+                <span class="self-end font-bold text-lg dark:text-gray-500">₱7.00</span>
+                <img src="{% static 'images/default-product.png' %}" class=" h-14 w-14 object-cover rounded-md" alt="">
+              </div>
+            </div>
+            <div class="px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between">
+              <div>
+                <div class="font-bold text-gray-800">Pizza Bacon</div>
+                <span class="font-light text-sm text-gray-400">150g</span>
+              </div>
+              <div class="flex flex-row justify-between items-center">
+                <span class="self-end font-bold text-lg dark:text-gray-500">₱1.75</span>
+                <img src="{% static 'images/default-product.png' %}" class=" h-14 w-14 object-cover rounded-md" alt="">
+              </div>
+            </div>
+            <div class="px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between">
+              <div>
+                <div class="font-bold text-gray-800">Griled corn</div>
+                <span class="font-light text-sm text-gray-400">150g</span>
+              </div>
+              <div class="flex flex-row justify-between items-center">
+                <span class="self-end font-bold text-lg dark:text-gray-500">₱1.75</span>
+                <img src="{% static 'images/default-product.png' %}" class=" h-14 w-14 object-cover rounded-md" alt="">
+              </div>
+            </div>
+            <div class="px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between">
+              <div>
+                <div class="font-bold text-gray-800">Griled corn</div>
+                <span class="font-light text-sm text-gray-400">150g</span>
+              </div>
+              <div class="flex flex-row justify-between items-center">
+                <span class="self-end font-bold text-lg dark:text-gray-500">₱1.75</span>
+                <img src="{% static 'images/default-product.png' %}" class=" h-14 w-14 object-cover rounded-md" alt="">
+              </div>
+            </div>
+            <div class="px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between">
+              <div>
+                <div class="font-bold text-gray-800">Griled corn</div>
+                <span class="font-light text-sm text-gray-400">150g</span>
+              </div>
+              <div class="flex flex-row justify-between items-center">
+                <span class="self-end font-bold text-lg dark:text-gray-500">₱1.75</span>
+                <img src="{% static 'images/default-product.png' %}" class=" h-14 w-14 object-cover rounded-md" alt="">
+              </div>
+            </div>
+            <div class="px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between">
+              <div>
+                <div class="font-bold text-gray-800">Griled corn</div>
+                <span class="font-light text-sm text-gray-400">150g</span>
+              </div>
+              <div class="flex flex-row justify-between items-center">
+                <span class="self-end font-bold text-lg dark:text-gray-500">₱1.75</span>
+                <img src="{% static 'images/default-product.png' %}" class=" h-14 w-14 object-cover rounded-md" alt="">
+              </div>
+            </div>
+            <div class="px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between">
+              <div>
+                <div class="font-bold text-gray-800">Griled corn</div>
+                <span class="font-light text-sm text-gray-400">150g</span>
+              </div>
+              <div class="flex flex-row justify-between items-center">
+                <span class="self-end font-bold text-lg dark:text-gray-500">₱1.75</span>
+                <img src="{% static 'images/default-product.png' %}" class=" h-14 w-14 object-cover rounded-md" alt="">
+              </div>
+            </div>
+            <div class="px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between">
+              <div>
+                <div class="font-bold text-gray-800">Griled corn</div>
+                <span class="font-light text-sm text-gray-400">150g</span>
+              </div>
+              <div class="flex flex-row justify-between items-center">
+                <span class="self-end font-bold text-lg dark:text-gray-500">₱1.75</span>
+                <img src="{% static 'images/default-product.png' %}" class=" h-14 w-14 object-cover rounded-md" alt="">
+              </div>
+            </div>
+            <div class="px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between">
+              <div>
+                <div class="font-bold text-gray-800">Griled corn</div>
+                <span class="font-light text-sm text-gray-400">150g</span>
+              </div>
+              <div class="flex flex-row justify-between items-center">
+                <span class="self-end font-bold text-lg dark:text-gray-500">₱1.75</span>
+                <img src="{% static 'images/default-product.png' %}" class=" h-14 w-14 object-cover rounded-md" alt="">
+              </div>
+            </div>
+            <div class="px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between">
+              <div>
+                <div class="font-bold text-gray-800">Griled corn</div>
+                <span class="font-light text-sm text-gray-400">150g</span>
+              </div>
+              <div class="flex flex-row justify-between items-center">
+                <span class="self-end font-bold text-lg dark:text-gray-500">₱1.75</span>
+                <img src="{% static 'images/default-product.png' %}" class=" h-14 w-14 object-cover rounded-md" alt="">
+              </div>
+            </div>
+          </div>
+          <!-- end products -->
+        </div>
+        <!-- end left section -->
+        <!-- right section -->
+        <div class="w-full lg:w-2/5">
+          <!-- header -->
+          <div class="flex flex-row items-center justify-between px-5 mt-5">
+            <div class="font-bold text-xl">Current Order</div>
+            <div class="font-semibold">
+              <span class="px-4 py-2 rounded-md bg-red-100 text-red-500">Clear All</span>
+            </div>
+          </div>
+          <!-- end header -->
+          <!-- order list -->
+          <div class="px-5 py-4 mt-5 overflow-y-auto h-64">
+              <div class="flex flex-row justify-between items-center mb-4">
+                <div class="flex flex-row items-center w-2/5">
+                  <img src="https://source.unsplash.com/4u_nRgiLW3M/600x600" class="w-10 h-10 object-cover rounded-md" alt="">
+                  <span class="ml-4 font-semibold text-sm">Stuffed flank steak</span>
+                </div>
+                <div class="w-32 flex justify-between">
+                  <span class="px-3 py-1 rounded-md bg-gray-300 ">-</span>
+                  <span class="font-semibold mx-4">2</span>
+                  <span class="px-3 py-1 rounded-md bg-gray-300 ">+</span>
+                </div>
+                <div class="font-semibold text-lg w-16 text-center">
+                  ₱13.50
+                </div>
+              </div>             
+              <div class="flex flex-row justify-between items-center mb-4">
+                <div class="flex flex-row items-center w-2/5">
+                  <img src="https://source.unsplash.com/sc5sTPMrVfk/600x600" class="w-10 h-10 object-cover rounded-md" alt="">
+                  <span class="ml-4 font-semibold text-sm">Grilled Corn</span>
+                </div>
+                <div class="w-32 flex justify-between">
+                  <span class="px-3 py-1 rounded-md bg-gray-300 ">-</span>
+                  <span class="font-semibold mx-4">10</span>
+                  <span class="px-3 py-1 rounded-md bg-gray-300 ">+</span>
+                </div>
+                <div class="font-semibold text-lg w-16 text-center">
+                  ₱3.50
+                </div>
+              </div>
+              <div class="flex flex-row justify-between items-center mb-4">
+                <div class="flex flex-row items-center w-2/5">
+                  <img src="https://source.unsplash.com/MNtag_eXMKw/600x600" class="w-10 h-10 object-cover rounded-md" alt="">
+                  <span class="ml-4 font-semibold text-sm">Grilled Corn</span>
+                </div>
+                <div class="w-32 flex justify-between">
+                  <span class="px-3 py-1 rounded-md bg-gray-300 ">-</span>
+                  <span class="font-semibold mx-4">10</span>
+                  <span class="px-3 py-1 rounded-md bg-gray-300 ">+</span>
+                </div>
+                <div class="font-semibold text-lg w-16 text-center">
+                  ₱3.50
+                </div>
+              </div>
+              <div class="flex flex-row justify-between items-center mb-4">
+                <div class="flex flex-row items-center w-2/5">
+                  <img src="https://source.unsplash.com/MNtag_eXMKw/600x600" class="w-10 h-10 object-cover rounded-md" alt="">
+                  <span class="ml-4 font-semibold text-sm">Grilled Corn</span>
+                </div>
+                <div class="w-32 flex justify-between">
+                  <span class="px-3 py-1 rounded-md bg-gray-300 ">-</span>
+                  <span class="font-semibold mx-4">10</span>
+                  <span class="px-3 py-1 rounded-md bg-gray-300 ">+</span>
+                </div>
+                <div class="font-semibold text-lg w-16 text-center">
+                  ₱3.50
+                </div>
+              </div> 
+              <div class="flex flex-row justify-between items-center mb-4">
+                <div class="flex flex-row items-center w-2/5">
+                  <img src="https://source.unsplash.com/MNtag_eXMKw/600x600" class="w-10 h-10 object-cover rounded-md" alt="">
+                  <span class="ml-4 font-semibold text-sm">Ranch Burger</span>
+                </div>
+                <div class="w-32 flex justify-between">
+                  <span class="px-3 py-1 rounded-md bg-red-300 text-white">x</span>
+                  <span class="font-semibold mx-4">1</span>
+                  <span class="px-3 py-1 rounded-md bg-gray-300 ">+</span>
+                </div>
+                <div class="font-semibold text-lg w-16 text-center">
+                  ₱2.50
+                </div>
+              </div> 
+              <div class="flex flex-row justify-between items-center mb-4">
+                <div class="flex flex-row items-center w-2/5">
+                  <img src="https://source.unsplash.com/4u_nRgiLW3M/600x600" class="w-10 h-10 object-cover rounded-md" alt="">
+                  <span class="ml-4 font-semibold text-sm">Ranch Burger</span>
+                </div>
+                <div class="w-32 flex justify-between">
+                  <span class="px-3 py-1 rounded-md bg-red-300 text-white">x</span>
+                  <span class="font-semibold mx-4">1</span>
+                  <span class="px-3 py-1 rounded-md bg-gray-300 ">+</span>
+                </div>
+                <div class="font-semibold text-lg w-16 text-center">
+                  ₱2.50
+                </div>
+              </div>            
+          </div>
+          <!-- end order list -->
+          <!-- totalItems -->
+          <div class="px-5 mt-5">
+            <div class="py-4 rounded-md shadow-lg">
+              <div class=" px-4 flex justify-between ">
+                <span class="font-semibold text-sm">Subtotal</span>
+                <span class="font-bold">₱35.25</span>
+              </div>
+              <div class=" px-4 flex justify-between ">
+                <span class="font-semibold text-sm">Discount</span>
+                <span class="font-bold">- ₱5.00</span>
+              </div>
+              <div class=" px-4 flex justify-between ">
+                <span class="font-semibold text-sm">Sales Tax</span>
+                <span class="font-bold">₱2.25</span>
+              </div>
+              <div class="border-t-2 mt-3 py-2 px-4 flex items-center justify-between">
+                <span class="font-semibold text-2xl">Total</span>
+                <span class="font-bold text-2xl">₱37.50</span>
+              </div>
+            </div>
+          </div>
+          <!-- end total -->
+          <!-- button pay-->
+          <div class="px-5 mt-5">
+            <button class="flex items-center justify-center gap-2 px-4 py-4 rounded-md shadow-lg text-center bg-blue-500 text-white font-semibold w-full cursor-pointer hover:bg-blue-400">
+              <i class="material-icons">payments</i>
+              CHECKOUT
+            </button>
+          </div>
+          <!-- end button pay -->
+        </div>
+        <!-- end right section -->
+    </div>
+</section>
+{% endblock 'content' %}

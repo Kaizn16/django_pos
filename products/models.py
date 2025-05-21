@@ -10,9 +10,6 @@ class Category(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-        return self.category_name
-
 
 class Product(models.Model):
     class Meta:
@@ -26,9 +23,7 @@ class Product(models.Model):
     buying_price = models.DecimalField(null=False, blank=False, max_digits=10, decimal_places=2)
     sku = models.CharField(max_length=255, blank=True, null=True)
     barcode = models.CharField(max_length=255, blank=True, null=True)
+    low_stock_threshold = models.PositiveIntegerField(default=10)
     status = models.BooleanField(null=False, default=True, blank=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.product_name
