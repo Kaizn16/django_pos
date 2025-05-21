@@ -1,48 +1,68 @@
 from django.db import models
-from products.models import Product
 from django.core.exceptions import ValidationError
+from products.models import Product
 
-# Create your models here.
 class Stock(models.Model):
     class Meta:
         db_table = 'tbl_stocks'
 
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=False, blank=False)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=0)
     max_quantity = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    # Update max_quantity if current quantity exceeds it
-    def save(self, *args, **kwargs):
-        if self.quantity > self.max_quantity: 
-            self.max_quantity = self.quantity
-        super().save(*args, **kwargs)
+    def update_quantity(self, delta):
+        new_quantity = self.quantity + delta
+        if new_quantity < 0:
+            raise ValidationError("Stock cannot go below zero.")
+        self.quantity = new_quantity
 
+        # Update max_quantity only if it's a stock-in and exceeds previous max
+        if delta > 0 and self.quantity > self.max_quantity:
+            self.max_quantity = self.quantity
+
+        self.save()
+
+    def __str__(self):
+        return f"{self.product.name} - {self.quantity} in stock"
 
 class StockLog(models.Model):
     STOCK_TYPE_CHOICES = [
         ('in', 'Stock-In'),
         ('out', 'Stock-Out'),
+        ('adjust', 'Adjustment'),
+        ('return', 'Return'),
     ]
 
     class Meta:
         db_table = 'tbl_stock_logs'
 
-    stock = models.ForeignKey(Stock, on_delete=models.CASCADE, null=False, blank=False)
+    stock = models.ForeignKey(Stock, on_delete=models.CASCADE)
     change = models.IntegerField()
-    type = models.CharField(max_length=3, choices=STOCK_TYPE_CHOICES)
+    type = models.CharField(max_length=7, choices=STOCK_TYPE_CHOICES)
     reason = models.CharField(max_length=255, blank=True, null=True)
+    reference_type = models.CharField(max_length=50, blank=True, null=True)
+    reference_id = models.PositiveIntegerField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def clean(self):
-        # Ensure consistency between `change` and `type`
-        if self.type == 'in' and self.change < 0:
-            raise ValidationError("Stock-In must have a positive change.")
-        if self.type == 'out' and self.change > 0:
+        # Validate consistency between change and type
+        if self.type in ['in', 'return'] and self.change <= 0:
+            raise ValidationError("Stock-In or Return must have a positive change.")
+        if self.type in ['out'] and self.change >= 0:
             raise ValidationError("Stock-Out must have a negative change.")
+        if self.type == 'adjust' and self.change == 0:
+            raise ValidationError("Adjustment must have a non-zero change.")
 
     def save(self, *args, **kwargs):
         self.full_clean()
+        is_new = self._state.adding
         super().save(*args, **kwargs)
+
+        if is_new:
+            self.stock.update_quantity(self.change)
+
+    def __str__(self):
+        return f"{self.get_type_display()} {self.change} for {self.stock.product.name}"

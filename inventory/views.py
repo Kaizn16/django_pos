@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from django.contrib import messages
 from django.http import JsonResponse
 from django.core.paginator import Paginator
+from django.db import transaction
 # Create your views here.
 
 @login_required
@@ -18,26 +19,33 @@ def inventory(request):
 @login_required
 @role_required('administrator', 'manager')
 def add_product_stock(request):
-    products = Product.objects.filter(stock__isnull=True)
+    products = Product.objects.all()
 
     data = {
         'products': products
     }
 
     if request.method == 'POST':
-        
         try:
             product_id = request.POST.get('product')
             quantity = int(request.POST.get('quantity'))
+            if quantity <= 0:
+                messages.error(request, 'Quantity must be greater than zero.')
+                return render(request, 'pages/inventory/product_stock_form.html', data)
 
             product = get_object_or_404(Product, pk=product_id)
 
-            Stock.objects.create(
-                product=product,
-                quantity=quantity
-            )
+            with transaction.atomic():
+                stock, created = Stock.objects.get_or_create(product=product)
 
-            messages.success(request, f'Stock for {product.product_name} added successfully.')
+                StockLog.objects.create(
+                    stock=stock,
+                    change=quantity,
+                    type='in',
+                    reason='Initial stock added' if created else 'Product stock added'
+                )
+
+            messages.success(request, f'Stock for {product.product_name} updated successfully.')
             return redirect('inventory:inventory')
 
         except ValueError:
@@ -92,21 +100,21 @@ def fetch_stocks(request):
 def adjust_stock(request, id=None):
     stock = Stock.objects.select_related('product').filter(pk=id).first()
 
+    if not stock:
+        messages.error(request, "Product stock not found!")
+        return redirect('inventory:inventory')
+
     data = {
         'stock': stock,
     }
 
-    if not stock:
-        messages.error(request, "Product stock not found!")
-        return redirect('inventory:inventory')
-    
     if request.method == "POST":
         try:
             change = int(request.POST.get('change'))
             type_ = request.POST.get('type')
             reason = request.POST.get('reason', '')
 
-            # Make sure the change is negative for stock-out
+            # Normalize change value based on type
             if type_ == 'out':
                 change = -abs(change)
                 if stock.quantity + change < 0:
@@ -115,16 +123,20 @@ def adjust_stock(request, id=None):
             else:
                 change = abs(change)
 
-            # Update the stock quantity
-            stock.quantity += change
-            stock.save()
+            with transaction.atomic(): # we use transaction here to ensure data consistency
+                # Update the stock quantity
+                stock.quantity += change
+                stock.save()
 
-            StockLog.objects.create(
-                stock=stock,
-                change=change,
-                type=type_,
-                reason=reason,
-            )
+                # Log the stock change
+                StockLog.objects.create(
+                    stock=stock,
+                    change=change,
+                    type=type_,
+                    reason=reason,
+                    reference_type='adjustment',
+                    reference_id=None
+                )
 
             messages.success(request, "Stock updated successfully.")
             return redirect('inventory:inventory')
@@ -135,10 +147,11 @@ def adjust_stock(request, id=None):
 
     return render(request, 'pages/inventory/adjust_stock_form.html', data)
 
+
 @login_required
 @role_required('administrator', 'manager')
 def stock_logs(request, id=None):
-    stockLog = StockLog.objects.filter(pk=id).first()
+    stockLog = StockLog.objects.filter(stock_id=id).first()
 
     if not stockLog:
         messages.error(request, "There's no stock log for that product yet!")
