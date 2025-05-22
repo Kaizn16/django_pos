@@ -1,39 +1,53 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="csrf-token" content="{{ csrf_token }}">
+    {% load static %}
     <link rel="icon" type="image/x-icon" href="{% static 'images/App-Logo.png' %}">
     <link rel="stylesheet" href="{% static 'css/output.css' %}" />
     <link href="{% static 'css/material-icons.css' %}" rel="stylesheet">
     <link href="{% static 'icons/more-material-icons.css' %}" rel="stylesheet">
     <title>{% if request.user.is_authenticated %} {{ request.user.role.role_type }} {% endif %} - Point Of Sale - {% block 'title' %} {% endblock 'title' %}</title>
 </head>
-<body>
-    {% if request.user.is_authenticated %}
-    <div class="layout-container flex min-h-screen bg-amber-50">
+<body class="min-h-screen">
+    {% if request.user.is_authenticated %}  
+    <section class="min-h-screen flex bg-amber-50">
+        
+        {% if request.user.role.role_type != 'cashier' %}
+
         {% include "layouts/_sidebar.html" %}
 
-        <div class="flex flex-col flex-grow ml-0 md:ml-64 min-h-screen">
+        {% endif %}
+
+        <section class="flex flex-col w-full min-h-screen ml-0 {% if request.user.role.role_type != 'cashier' %} md:ml-64 {% endif %}">
 
             {% include "layouts/_navbar.html" %}
 
-            <main class="flex-grow p-6 mt-">
+            <main class="flex-1 p-6">
                 {% block 'content' %}
                 {% endblock 'content' %}
             </main>
-        </div>
+
+            {% include "layouts/_footer.html" %}
+
+        </section>
+
         {% if messages %}
             {% for message in messages %}
                 {% include "components/toastNotification.html" with message=message message_type=message.tags %}
             {% endfor %}
         {% endif %}
+
         {% include "components/changePasswordModal.html" %}
-    </div>
-    <script src="{% static 'js/index.js' %}"></script>
-    
+
+    </section>
+    {% if request.user.role.role_type != 'cashier' %}
+    <script src="{% static 'js/sidebar.js' %}"></script>
+    {% endif %}
+    <script src="{% static 'js/notifications.js' %}"></script>
+    <script src="{% static 'js/profile.js' %}"></script>
     {% endif %}
 </body> 
 </html>

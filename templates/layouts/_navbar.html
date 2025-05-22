@@ -1,6 +1,6 @@
 <header class="w-full flex items-center h-16 bg-gray-900 text-white px-6 py-3 shadow-md sticky top-0 z-50">
     <!-- Toggle Button (only visible on mobile) -->
-    <div class="md:hidden">
+    <section class="md:hidden">
         <button id="sidebarToggle" class="bg-blue-400 p-2 rounded-md focus:outline-none">
             <svg class="w-6 h-6 text-gray-900" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
                 stroke-linecap="round" stroke-linejoin="round">
@@ -9,24 +9,38 @@
                 <line x1="3" y1="18" x2="21" y2="18" />
             </svg>
         </button>
-    </div>
+    </section>
     <div class="flex-grow"></div>
-    <div class="relative">
-        <button id="profileBtn" class="flex items-center space-x-2 focus:outline-none hover:text-gray-400">
-            <img 
-            {% load static %}
-            src="{% if request.user.profile %}{{ request.user.profile.url }}{% else %}{% static 'images/default-profile.png' %}{% endif %}" alt="Profile Image"
-            alt="Profile Preview" 
-            class="bg-white" style="max-width: 42px;clip-path: circle();">
-            <span>{{ request.user.full_name }}</span>
-            <i class="material-icons">arrow_drop_down</i>
-        </button>
+    <section class="flex row gap-3 items-center">
 
-        <!-- Dropdown -->
-        <div id="profileDropdown" class="hidden absolute right-0 mt-2 w-max bg-white rounded-md shadow-lg text-gray-800 z-50">
-            <a href="{% url 'users:users.myprofile' request.user.id %}" class="block px-4 py-2 hover:bg-blue-400 hover:text-white">My Profile</a>
-            <button class="block px-4 py-2 hover:bg-blue-400 hover:text-white">Change Password</button>
-            <a href="{% url 'login:logout' %}" class="block px-4 py-2 hover:bg-blue-400 hover:text-white">Logout</a>
-        </div>
-    </div>
+        
+        <section class="relative">
+            <button id="notificationBtn" class="relative cursor-pointer hover:text-gray-400">
+                <i class="material-icons">notifications</i>
+            </button>
+
+            <div id="notificationDropdown" class="hidden absolute right-0 mt-2 p-2 w-64 bg-white rounded-md shadow-lg text-gray-800 z-50">
+                <p>test</p>
+            </div>
+        </section>
+
+        <section class="relative">
+            <button id="profileBtn" class="flex items-center space-x-2 focus:outline-none hover:text-gray-400">
+                <img 
+                {% load static %}
+                src="{% if request.user.profile %}{{ request.user.profile.url }}{% else %}{% static 'images/default-profile.png' %}{% endif %}" alt="Profile Image"
+                alt="Profile Preview" 
+                class="bg-white" style="max-width: 42px;clip-path: circle();">
+                <span class="hidden sm:inline">{{ request.user.full_name }}</span>
+                <i class="material-icons">arrow_drop_down</i>
+            </button>
+
+            <!-- Dropdown -->
+            <div id="profileDropdown" class="hidden absolute right-0 mt-2 w-max bg-white rounded-md shadow-lg text-gray-800 z-50">
+                <a href="{% url 'users:users.myprofile' request.user.id %}" class="block px-4 py-2 hover:bg-blue-400 hover:text-white">My Profile</a>
+                <button class="block px-4 py-2 hover:bg-blue-400 hover:text-white">Change Password</button>
+                <a href="{% url 'login:logout' %}" class="block px-4 py-2 hover:bg-blue-400 hover:text-white">Logout</a>
+            </div>
+        </section>
+    </section>
 </header>

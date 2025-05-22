@@ -2,33 +2,59 @@
 {% load static %}
 {% block 'title' %} Dashboard {% endblock 'title' %}
 {% block 'content' %}
-    <h1 class="text-2xl font-bold mb-6">Welcome to the Dashboard</h1>
+    <h1 class="text-2xl font-bold mb-6">Dashboard</h1>
     <section class="w-full h-auto p-2">
         
-        <div class="flex flex-col md:flex-row md:gap-6 gap-4 mb-6">
-            <div class="flex-1 bg-green-400 shadow-md rounded-lg p-6 flex flex-col justify-center items-center">
-                <h2 class="text-lg font-semibold mb-2">Daily Income</h2>
-                <p class="text-3xl font-bold text-dark">₱1,200</p>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+            <!-- Daily Sales Card -->
+            <div class="flex items-center bg-green-100 shadow-md rounded-2xl p-6">
+                <span class="material-icons text-green-600 text-4xl mr-5">shopping_cart</span>
+                <div>
+                <h2 class="text-sm text-gray-600 font-medium">Daily Sales</h2>
+                <p class="text-2xl font-bold text-gray-800">₱1,200</p>
+                </div>
             </div>
-            
-            <div class="flex-1 bg-blue-400 shadow-md rounded-lg p-6 flex flex-col justify-center items-center">
-                <h2 class="text-lg font-semibold mb-2">Monthly Income</h2>
-                <p class="text-3xl font-bold text-dark">₱35,000</p>
+
+            <!-- Daily Profit Card -->
+            <div class="flex items-center bg-blue-100 shadow-md rounded-2xl p-6">
+                <span class="material-icons text-blue-600 text-4xl mr-5">attach_money</span>
+                <div>
+                <h2 class="text-sm text-gray-600 font-medium">Daily Profit</h2>
+                <p class="text-2xl font-bold text-gray-800">₱800</p>
+                </div>
             </div>
-            
-            <div class="flex-1 bg-purple-400 shadow-md rounded-lg p-6 flex flex-col justify-center items-center">
-                <h2 class="text-lg font-semibold mb-2">Yearly Income</h2>
-                <p class="text-3xl font-bold text-dark">₱420,000</p>
+
+            <!-- Daily Transaction Card -->
+            <div class="flex items-center bg-yellow-100 shadow-md rounded-2xl p-6">
+                <span class="material-icons text-yellow-600 text-4xl mr-5">receipt_long</span>
+                <div>
+                    <h2 class="text-sm text-gray-600 font-medium">Daily Transactions</h2>
+                    <p class="text-2xl font-bold text-gray-800">45</p>
+                </div>
+            </div>
+
+            <!-- Daily Products Sold Card -->
+            <div class="flex items-center bg-purple-100 shadow-md rounded-2xl p-6">
+                <span class="material-icons text-purple-600 text-4xl mr-5">inventory_2</span>
+                <div>
+                <h2 class="text-sm text-gray-600 font-medium">Daily Products Sold</h2>
+                <p class="text-2xl font-bold text-gray-800">120 pcs</p>
+                </div>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mt-6">
-            <!-- Pie Chart for Top Categories -->
-            <div id="topCategoriesChart" class="w-full h-64 md:h-96"></div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mt-6 shadow-md rounded-2xl">
+            <!-- Top Categories Chart -->
+            <div class="w-full min-h-[384px]">
+                <div id="topCategoriesChart" class="w-full h-full"></div>
+            </div>
 
-            <!-- Bar Chart for Most Product Sales -->
-            <div id="productSalesChart" class="w-full h-64 md:h-96"></div>
+            <!-- Product Sales Chart -->
+            <div class="w-full min-h-[384px]">
+                <div id="productSalesChart" class="w-full h-full"></div>
+            </div>
         </div>
+
 
 
     </section>

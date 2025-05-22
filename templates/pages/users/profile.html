@@ -4,7 +4,7 @@
 {% endblock 'title' %}
 
 {% block 'content' %}
-    <h1 class="text-3xl font-bold">User Profile</h1>
+    <h1 class="text-3xl font-bold">My Profile</h1>
     <section class="w-full h-auto p-2 flex flex-col gap-3">
         <section class="dark:bg-gray-800 p-5 rounded-2xl">
             <form method="POST" action="{% url 'users:users.update_profile' user.id %}" enctype="multipart/form-data">

@@ -14,26 +14,29 @@
           </div>
           <!-- end header -->
         
-          <div class="mt-5 px-5">
+          <section class="mt-5 px-5">
             <div class="flex flex-col sm:flex-row sm:items-center gap-4">
               <!-- Scrollable category list -->
-              <div class="flex overflow-x-auto w-80 gap-2 sm:gap-4 scrollbar-thin scrollbar-thumb-gray-300">
-                <span class="whitespace-nowrap px-5 py-1 dark:bg-gray-500 rounded-2xl text-white text-sm mr-1">
-                  All items
-                </span>
-                <span class="whitespace-nowrap px-5 py-1 rounded-2xl text-sm font-semibold mr-1">
-                  Beverages
-                </span>
-                <span class="whitespace-nowrap px-5 py-1 rounded-2xl text-sm font-semibold mr-1">
-                  Snacks
-                </span>
-                 <span class="whitespace-nowrap px-5 py-1 rounded-2xl text-sm font-semibold mr-1">
-                  Snacks
-                </span>
-                 <span class="whitespace-nowrap px-5 py-1 rounded-2xl text-sm font-semibold mr-1">
-                  Snacks
-                </span>
-                <!-- Add more categories as needed -->
+              <div class="relative w-80">
+                <!-- Left Arrow -->
+                <div id="leftArrow" class="absolute left-0 top-1/2 -translate-y-1/2 z-10 dark:bg-gray-500 text-white p-1 rounded-full shadow hidden cursor-pointer">
+                  <i class="material-icons">chevron_left</i>
+                </div>  
+
+                <!-- Scrollable Categories -->
+                <div id="categoryScroll" class="flex overflow-x-auto gap-2 sm:gap-4 p-4 scrollbar-thin scrollbar-thumb-gray-200 scroll-smooth">
+                  <span class="whitespace-nowrap px-5 py-1 dark:bg-gray-500 rounded-2xl text-white text-sm mr-1">All items</span>
+                  <span class="whitespace-nowrap px-5 py-1 rounded-2xl text-sm font-semibold mr-1">Beverages</span>
+                  <span class="whitespace-nowrap px-5 py-1 rounded-2xl text-sm font-semibold mr-1">Snacks</span>
+                  <span class="whitespace-nowrap px-5 py-1 rounded-2xl text-sm font-semibold mr-1">Snacks</span>
+                  <span class="whitespace-nowrap px-5 py-1 rounded-2xl text-sm font-semibold mr-1">Snacks</span>
+                  <!-- Add more categories as needed -->
+                </div>
+
+                <!-- Right Arrow -->
+                <div id="rightArrow" class  ="absolute right-0 top-1/2 -translate-y-1/2 z-10 dark:bg-gray-500 text-white p-1 rounded-full shadow cursor-pointer">
+                  <i class="material-icons">chevron_right</i>
+                </div>
               </div>
 
               <!-- Search input -->
@@ -51,7 +54,7 @@
                   placeholder="Search">
               </div>
             </div>
-          </div>
+          </section>
 
           <!-- products -->
           <div class="grid grid-cols-3 gap-4 px-5 mt-5 overflow-y-auto h-3/4">
@@ -173,9 +176,10 @@
         <div class="w-full lg:w-2/5">
           <!-- header -->
           <div class="flex flex-row items-center justify-between px-5 mt-5">
-            <div class="font-bold text-xl">Current Order</div>
+            <div class="font-bold text-xl">Cart</div>
             <div class="font-semibold">
               <span class="px-4 py-2 rounded-md bg-red-100 text-red-500">Clear All</span>
+              <span class="px-4 py-2 rounded-md bg-red-100 text-red-500">Settings</span>
             </div>
           </div>
           <!-- end header -->
@@ -301,4 +305,27 @@
         <!-- end right section -->
     </div>
 </section>
+<script>
+  const scrollContainer = document.getElementById("categoryScroll");
+  const leftArrow = document.getElementById("leftArrow");
+  const rightArrow = document.getElementById("rightArrow");
+
+  function updateArrows() {
+    const maxScrollLeft = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+    leftArrow.style.display = scrollContainer.scrollLeft > 0 ? 'block' : 'none';
+    rightArrow.style.display = scrollContainer.scrollLeft < maxScrollLeft ? 'block' : 'none';
+  }
+
+  leftArrow.onclick = () => {
+    scrollContainer.scrollBy({ left: -100, behavior: 'smooth' });
+  };
+
+  rightArrow.onclick = () => {
+    scrollContainer.scrollBy({ left: 100, behavior: 'smooth' });
+  };
+
+  scrollContainer.addEventListener('scroll', updateArrows);
+
+  window.addEventListener('load', updateArrows);
+</script>
 {% endblock 'content' %}

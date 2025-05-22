@@ -1,20 +1,3 @@
-const sidebar = document.getElementById('mobileSidebar');
-const toggleBtn = document.getElementById('sidebarToggle');
-const closeBtn = document.getElementById('closeSidebar');
-
-function openSidebar() {
-    sidebar.classList.remove('-translate-x-full');
-    toggleBtn.classList.add('hidden');
-}
-
-function closeSidebar() {
-    sidebar.classList.add('-translate-x-full');
-    toggleBtn.classList.remove('hidden');
-}
-
-toggleBtn.addEventListener('click', openSidebar);
-closeBtn.addEventListener('click', closeSidebar);
-
 const profileBtn = document.getElementById('profileBtn');
 const profileDropdown = document.getElementById('profileDropdown');
 const changePasswordBtn = profileDropdown.querySelector('button');
@@ -46,14 +29,8 @@ changePasswordModal.addEventListener('click', (e) => {
 });
 
 document.addEventListener('click', (event) => {
-    const isClickInsideSidebar = sidebar.contains(event.target);
-    const isClickOnToggleBtn = toggleBtn.contains(event.target);
     const isClickInsideProfileBtn = profileBtn.contains(event.target);
     const isClickInsideProfileDropdown = profileDropdown.contains(event.target);
-
-    if (!isClickInsideSidebar && !isClickOnToggleBtn) {
-        closeSidebar();
-    }
 
     if (!isClickInsideProfileBtn && !isClickInsideProfileDropdown) {
         profileDropdown.classList.add('hidden');

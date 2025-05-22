@@ -49,10 +49,17 @@
                 <a href="{% url 'inventory:inventory' %}" 
                 class="flex items-center gap-2 py-2 px-4 rounded transition
                 {% if request.resolver_match.url_name == 'inventory' or request.resolver_match.url_name == 'inventory.add_product_stock' or request.resolver_match.url_name == 'inventory.stock_logs' or request.resolver_match.url_name == 'inventory.adjust_stock' %}bg-blue-400 text-white font-bold{% else %}hover:bg-blue-400 hover:text-gray-900{% endif %}">
-                <i class="material-icons">warehouse</i>
+                <i class="material-icons">inventory_2</i>
                 Inventory
                 </a>
             </li>
+            <li>
+                <a href="" 
+                class="flex items-center gap-2 py-2 px-4 rounded transition
+                {% if request.resolver_match.url_name == 'warehouse' or request.resolver_match.url_name == 'warehouse.add_warehouse' or request.resolver_match.url_name == 'warehouse.edit_warehouse' %}bg-blue-400 text-white font-bold{% else %}hover:bg-blue-400 hover:text-gray-900{% endif %}">
+                <i class="material-icons">warehouse</i>
+                warehouse
+                </a>
             <li>
                 <a href="{% url 'users:users' %}" 
                 class="flex items-center gap-2 py-2 px-4 rounded transition
