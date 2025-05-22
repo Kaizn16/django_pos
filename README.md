@@ -53,10 +53,10 @@ pip install -r requirements.txt
 ---
 
 #### 4. Create a Database
-```bash
+
 Create a new database (e.g., django_pos_db)
 Ensure your database settings are correctly configured in settings.py.
-```
+
 ---
 
 #### 5. Apply Migrations & Seed Roles
@@ -79,6 +79,8 @@ python manage.py createsuperuser
 python manage.py runserver
 npm run tailwind
 ```
+
+---
 
 🤝 Contributing
 Contributions are welcome for educational improvements and bug fixes.
