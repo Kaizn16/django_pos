@@ -3,8 +3,8 @@
 {% block 'title' %} Sales {% endblock 'title' %}
 {% block 'content' %}
 <section class="w-full h-auto p-2 flex flex-col gap-3">
-    <div class="flex lg:flex-row flex-col-reverse shadow-lg bg-white">
-        <div class="w-full lg:w-3/5 min-h-screen shadow-lg">
+    <div class="flex lg:flex-row flex-col bg-white">
+        <div class="w-full lg:w-3/5 md:min-h-screen shadow-md h-full">
           <!-- header -->
           <div class="flex flex-row justify-between items-center px-5 mt-5">
             <div class="text-gray-800">
@@ -17,20 +17,17 @@
           <section class="mt-5 px-5">
             <div class="flex flex-col sm:flex-row sm:items-center gap-4">
               <!-- Scrollable category list -->
-              <div class="relative w-80">
+              <div class="relative w-52 sm:w-80">
                 <!-- Left Arrow -->
                 <div id="leftArrow" class="absolute left-0 top-1/2 -translate-y-1/2 z-10 dark:bg-gray-500 text-white p-1 rounded-full shadow hidden cursor-pointer">
                   <i class="material-icons">chevron_left</i>
                 </div>  
 
-                <!-- Scrollable Categories -->
-                <div id="categoryScroll" class="flex overflow-x-auto gap-2 sm:gap-4 p-4 scrollbar-thin scrollbar-thumb-gray-200 scroll-smooth">
-                  <span class="whitespace-nowrap px-5 py-1 dark:bg-gray-500 rounded-2xl text-white text-sm mr-1">All items</span>
-                  <span class="whitespace-nowrap px-5 py-1 rounded-2xl text-sm font-semibold mr-1">Beverages</span>
-                  <span class="whitespace-nowrap px-5 py-1 rounded-2xl text-sm font-semibold mr-1">Snacks</span>
-                  <span class="whitespace-nowrap px-5 py-1 rounded-2xl text-sm font-semibold mr-1">Snacks</span>
-                  <span class="whitespace-nowrap px-5 py-1 rounded-2xl text-sm font-semibold mr-1">Snacks</span>
-                  <!-- Add more categories as needed -->
+                <div id="categoryScroll" class="flex overflow-x-auto gap-2 sm:gap-4 p-4 scrollbar-thin scrollbar-thumb-gray-200 scroll-smooth w-52 sm:w-80">
+                  <span data-category="all" class="whitespace-nowrap px-5 py-1 dark:bg-gray-500 rounded-2xl text-white text-sm mr-1 cursor-pointer">All items</span>
+                  {% for category in categories %}
+                  <span data-category="{{ category.category_id }}" class="whitespace-nowrap px-5 py-1 rounded-2xl text-sm font-semibold mr-1 cursor-pointer">{{ category.category_name }}</span>
+                  {% endfor %}
                 </div>
 
                 <!-- Right Arrow -->
@@ -55,135 +52,31 @@
               </div>
             </div>
           </section>
-
+          <!-- loader -->
+           {% include 'components/loader.html' %}
+           <!-- loader -->
           <!-- products -->
-          <div class="grid grid-cols-3 gap-4 px-5 mt-5 overflow-y-auto h-3/4">
-            <div class="px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between">
-              <div>
-                <div class="font-bold text-gray-800">Griled corn</div>
-                <span class="font-light text-sm text-gray-400">150g</span>
-              </div>
-              <div class="flex flex-row justify-between items-center">
-                <span class="self-end font-bold text-lg dark:text-gray-500">₱1.75</span>
-                <img src="{% static 'images/default-product.png' %}" class=" h-14 w-14 object-cover rounded-md" alt="">
-              </div>
-            </div>
-            <div class="px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between">
-              <div>
-                <div class="font-bold text-gray-800">Ranch Burger</div>
-                <span class="font-light text-sm text-gray-400">150g</span>
-              </div>
-              <div class="flex flex-row justify-between items-center">
-                <span class="self-end font-bold text-lg dark:text-gray-500">₱7.00</span>
-                <img src="{% static 'images/default-product.png' %}" class=" h-14 w-14 object-cover rounded-md" alt="">
-              </div>
-            </div>
-            <div class="px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between">
-              <div>
-                <div class="font-bold text-gray-800">Pizza Bacon</div>
-                <span class="font-light text-sm text-gray-400">150g</span>
-              </div>
-              <div class="flex flex-row justify-between items-center">
-                <span class="self-end font-bold text-lg dark:text-gray-500">₱1.75</span>
-                <img src="{% static 'images/default-product.png' %}" class=" h-14 w-14 object-cover rounded-md" alt="">
-              </div>
-            </div>
-            <div class="px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between">
-              <div>
-                <div class="font-bold text-gray-800">Griled corn</div>
-                <span class="font-light text-sm text-gray-400">150g</span>
-              </div>
-              <div class="flex flex-row justify-between items-center">
-                <span class="self-end font-bold text-lg dark:text-gray-500">₱1.75</span>
-                <img src="{% static 'images/default-product.png' %}" class=" h-14 w-14 object-cover rounded-md" alt="">
-              </div>
-            </div>
-            <div class="px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between">
-              <div>
-                <div class="font-bold text-gray-800">Griled corn</div>
-                <span class="font-light text-sm text-gray-400">150g</span>
-              </div>
-              <div class="flex flex-row justify-between items-center">
-                <span class="self-end font-bold text-lg dark:text-gray-500">₱1.75</span>
-                <img src="{% static 'images/default-product.png' %}" class=" h-14 w-14 object-cover rounded-md" alt="">
-              </div>
-            </div>
-            <div class="px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between">
-              <div>
-                <div class="font-bold text-gray-800">Griled corn</div>
-                <span class="font-light text-sm text-gray-400">150g</span>
-              </div>
-              <div class="flex flex-row justify-between items-center">
-                <span class="self-end font-bold text-lg dark:text-gray-500">₱1.75</span>
-                <img src="{% static 'images/default-product.png' %}" class=" h-14 w-14 object-cover rounded-md" alt="">
-              </div>
-            </div>
-            <div class="px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between">
-              <div>
-                <div class="font-bold text-gray-800">Griled corn</div>
-                <span class="font-light text-sm text-gray-400">150g</span>
-              </div>
-              <div class="flex flex-row justify-between items-center">
-                <span class="self-end font-bold text-lg dark:text-gray-500">₱1.75</span>
-                <img src="{% static 'images/default-product.png' %}" class=" h-14 w-14 object-cover rounded-md" alt="">
-              </div>
-            </div>
-            <div class="px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between">
-              <div>
-                <div class="font-bold text-gray-800">Griled corn</div>
-                <span class="font-light text-sm text-gray-400">150g</span>
-              </div>
-              <div class="flex flex-row justify-between items-center">
-                <span class="self-end font-bold text-lg dark:text-gray-500">₱1.75</span>
-                <img src="{% static 'images/default-product.png' %}" class=" h-14 w-14 object-cover rounded-md" alt="">
-              </div>
-            </div>
-            <div class="px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between">
-              <div>
-                <div class="font-bold text-gray-800">Griled corn</div>
-                <span class="font-light text-sm text-gray-400">150g</span>
-              </div>
-              <div class="flex flex-row justify-between items-center">
-                <span class="self-end font-bold text-lg dark:text-gray-500">₱1.75</span>
-                <img src="{% static 'images/default-product.png' %}" class=" h-14 w-14 object-cover rounded-md" alt="">
-              </div>
-            </div>
-            <div class="px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between">
-              <div>
-                <div class="font-bold text-gray-800">Griled corn</div>
-                <span class="font-light text-sm text-gray-400">150g</span>
-              </div>
-              <div class="flex flex-row justify-between items-center">
-                <span class="self-end font-bold text-lg dark:text-gray-500">₱1.75</span>
-                <img src="{% static 'images/default-product.png' %}" class=" h-14 w-14 object-cover rounded-md" alt="">
-              </div>
-            </div>
-            <div class="px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between">
-              <div>
-                <div class="font-bold text-gray-800">Griled corn</div>
-                <span class="font-light text-sm text-gray-400">150g</span>
-              </div>
-              <div class="flex flex-row justify-between items-center">
-                <span class="self-end font-bold text-lg dark:text-gray-500">₱1.75</span>
-                <img src="{% static 'images/default-product.png' %}" class=" h-14 w-14 object-cover rounded-md" alt="">
-              </div>
-            </div>
+          <div id="product-grid" class="grid grid-cols-1 gap-4 px-5 mt-5 overflow-y-auto h-80 sm:grid-cols-3 md:h-3/4">
+            <!-- Dynamic product cards will be inserted here -->
           </div>
           <!-- end products -->
+
         </div>
         <!-- end left section -->
+
         <!-- right section -->
         <div class="w-full lg:w-2/5">
           <!-- header -->
-          <div class="flex flex-row items-center justify-between px-5 mt-5">
+          <div class="flex flex-wrap flex-row items-center justify-between px-5 mt-5 gap-2">
             <div class="font-bold text-xl">Cart</div>
-            <div class="font-semibold">
+            <div class="flex flex-wrap flex-row gap-2 font-semibold">
               <span class="px-4 py-2 rounded-md bg-red-100 text-red-500">Clear All</span>
               <span class="px-4 py-2 rounded-md bg-red-100 text-red-500">Settings</span>
             </div>
           </div>
           <!-- end header -->
-          <!-- order list -->
+
+          <!-- cart list -->
           <div class="px-5 py-4 mt-5 overflow-y-auto h-64">
               <div class="flex flex-row justify-between items-center mb-4">
                 <div class="flex flex-row items-center w-2/5">
@@ -270,7 +163,7 @@
                 </div>
               </div>            
           </div>
-          <!-- end order list -->
+          <!-- end cart list -->
           <!-- totalItems -->
           <div class="px-5 mt-5">
             <div class="py-4 rounded-md shadow-lg">
@@ -294,8 +187,8 @@
           </div>
           <!-- end total -->
           <!-- button pay-->
-          <div class="px-5 mt-5">
-            <button class="flex items-center justify-center gap-2 px-4 py-4 rounded-md shadow-lg text-center bg-blue-500 text-white font-semibold w-full cursor-pointer hover:bg-blue-400">
+          <div class="px-5 mt-5 mb-5">
+            <button class="flex items-center justify-center gap-2 px-4 py-4 rounded-md shadow-lg text-center bg-blue-500 text-white font-semibold w-full hover:bg-blue-400 cursor-pointer">
               <i class="material-icons">payments</i>
               CHECKOUT
             </button>
@@ -327,5 +220,65 @@
   scrollContainer.addEventListener('scroll', updateArrows);
 
   window.addEventListener('load', updateArrows);
+</script>
+<script>
+  async function renderProducts() {
+    const loader = document.getElementById("loader");
+    const productGrid = document.getElementById("product-grid");
+
+    loader.classList.remove("hidden");
+    productGrid.classList.add("hidden");
+    productGrid.innerHTML = '';
+
+    try {
+      const response = await fetch('/api/sales/products');
+      const products = await response.json();
+
+      products.forEach(product => {
+        const productCard = document.createElement('div');
+        productCard.className = 'relative px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between cursor-pointer hover:bg-gray-300';
+
+        const STOCK_PERCENTAGE = (product.stock / product.max_stock) * 100;
+
+        let colorClass = '';
+
+        if (STOCK_PERCENTAGE >= 80 && STOCK_PERCENTAGE === 100) {
+            colorClass = 'bg-green-500';
+        } else if (STOCK_PERCENTAGE > 10 && STOCK_PERCENTAGE <= 50) {
+            colorClass = 'bg-yellow-400';
+        } else if (STOCK_PERCENTAGE > 0 && STOCK_PERCENTAGE <= 10) {
+            colorClass = 'bg-red-500';
+        } else {
+            colorClass = 'dark:bg-gray-500';
+        }
+
+        productCard.innerHTML = `
+          <div class="absolute top-1 right-2 text-xs font-semibold px-2 py-0.5 rounded-full ${colorClass} text-white">
+            ${product.stock > 0 ? product.stock : '0'}
+          </div>
+          <div class="p-1">
+            <div class="font-bold text-gray-800">${product.product_name}</div>
+          </div>
+          <div class="flex flex-row justify-between items-center">
+            <span class="self-end font-bold text-lg dark:text-gray-500">₱${product.price}</span>
+            <img src="${product.image || '/static/images/default-product.png'}" class="h-14 w-14 object-cover rounded-md" alt="${product.name}">
+          </div>
+        `;
+
+        productGrid.appendChild(productCard);
+      });
+
+      loader.classList.add("hidden");
+      productGrid.classList.remove("hidden");
+
+    } catch (error) {
+      console.error("Failed to fetch products:", error);
+      loader.classList.add("hidden");
+      productGrid.innerHTML = `<p class="text-red-500 text-center w-full">Failed to load products.</p>`;
+      productGrid.classList.remove("hidden");
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", renderProducts);
 </script>
 {% endblock 'content' %}

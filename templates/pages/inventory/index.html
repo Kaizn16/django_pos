@@ -6,7 +6,6 @@
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg dark:bg-gray-900">
             <header class="flex flex-col md:flex-row md:justify-between gap-4 p-3 md:items-center dark:bg-gray-900">
                 <h2 class="text-2xl text-white">Product Stock List</h2>
-                
                 <div class="flex flex-col sm:flex-row sm:items-center gap-2">
                     <label for="search" class="sr-only">Search</label>
                     <div class="relative w-full sm:w-auto">
@@ -27,21 +26,19 @@
                 </div>
             </header>
             <div class="overflow-x-auto">
-                <div class="max-h-[500px] overflow-y-auto">
-                    <table class="w-full table-fixed text-sm text-left text-gray-500 dark:text-gray-400">
-                        <thead class="sticky top-0 z-10 text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                            <tr>
-                                <th class="px-6 py-3 w-1/4">Product</th>
-                                <th class="px-6 py-3 w-1/4">Warehouse</th>
-                                <th class="px-6 py-3 w-1/4">Stocks</th>
-                                <th class="px-6 py-3 w-1/4">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="data-table">
-                            <!-- Populate data dynamically -->
-                        </tbody>
-                    </table>
-                </div>
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="sticky top-0 z-10 text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th class="px-6 py-3 w-[25%]">Product</th>
+                            <th class="px-6 py-3 w-[25%]">Warehouse</th>
+                            <th class="px-6 py-3 w-[25%]">Stocks</th>
+                            <th class="px-6 py-3 w-[25%]">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="data-table">
+                        <!-- Populate data dynamically -->
+                    </tbody>
+                </table>
             </div>
             <div id="pagination-controls" class="mt-2 p-3 flex justify-center gap-2">
                 <!-- Populate pagination -->
