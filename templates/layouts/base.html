@@ -1,3 +1,4 @@
+{% load django_browser_reload %} <!-- FOR AUTO RELOAD DEVELOPMENT -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,11 +10,11 @@
     <link rel="stylesheet" href="{% static 'css/output.css' %}" />
     <link href="{% static 'css/material-icons.css' %}" rel="stylesheet">
     <link href="{% static 'icons/more-material-icons.css' %}" rel="stylesheet">
-    <title>{% if request.user.is_authenticated %} {{ request.user.role.role_type }} {% endif %} - Point Of Sale - {% block 'title' %} {% endblock 'title' %}</title>
+    <title>Point Of Sale - {% block 'title' %} {% endblock 'title' %}</title>
 </head>
-<body class="min-h-screen">
+<body class="min-h-screen w-full">
     {% if request.user.is_authenticated %}  
-    <section class="min-h-screen flex bg-amber-50">
+    <section class="min-h-screen w-full flex bg-amber-50">
         
         {% if request.user.role.role_type != 'cashier' %}
 
@@ -25,7 +26,7 @@
 
             {% include "layouts/_navbar.html" %}
 
-            <main class="flex-1 p-6">
+            <main class="flex-1 p-6 w-full">
                 {% block 'content' %}
                 {% endblock 'content' %}
             </main>
@@ -49,5 +50,6 @@
     <script src="{% static 'js/notifications.js' %}"></script>
     <script src="{% static 'js/profile.js' %}"></script>
     {% endif %}
+    {% django_browser_reload_script %} <!-- FOR AUTO RELOAD DEVELOPMENT -->
 </body> 
 </html>

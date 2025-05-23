@@ -2,7 +2,7 @@
 {% block 'title' %} Inventory {% endblock 'title' %}
 {% block 'content' %}
     <h1 class="text-3xl font-bold">Inventory Management</h1>
-    <section class="w-full h-auto p-2 flex flex-col gap-3">
+    <section class="h-screen w-full p-2 flex flex-col gap-3">
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg dark:bg-gray-900">
             <header class="flex flex-col md:flex-row md:justify-between gap-4 p-3 md:items-center dark:bg-gray-900">
                 <h2 class="text-2xl text-white">Product Stock List</h2>
@@ -26,24 +26,23 @@
                     </a>
                 </div>
             </header>
-            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                    <tr>
-                        <th scope="col" class="px-6 py-3">
-                            Product
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Stocks
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Action
-                        </th>
-                    </tr>
-                </thead>
-                <tbody id="data-table">
-                    <!-- Populate data -->
-                </tbody>
-            </table>
+            <div class="overflow-x-auto">
+                <div class="max-h-[500px] overflow-y-auto">
+                    <table class="w-full table-fixed text-sm text-left text-gray-500 dark:text-gray-400">
+                        <thead class="sticky top-0 z-10 text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                            <tr>
+                                <th class="px-6 py-3 w-1/4">Product</th>
+                                <th class="px-6 py-3 w-1/4">Warehouse</th>
+                                <th class="px-6 py-3 w-1/4">Stocks</th>
+                                <th class="px-6 py-3 w-1/4">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="data-table">
+                            <!-- Populate data dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
             <div id="pagination-controls" class="mt-2 p-3 flex justify-center gap-2">
                 <!-- Populate pagination -->
             </div>
@@ -87,15 +86,17 @@
                     }
                     
                     const STOCK_CHANGE_URL = `inventory/stocks/product/${stock.stock_id}/adjust-stock`;
+                    const STOCK_SETTINGS_URL = `inventory/stocks/product/${stock.stock_id}/settings`;
                     const STOCK_LOG_URL = `inventory/stocks/${stock.stock_id}/logs`;
 
                     const row = `
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
                             <td class="px-6 py-4">${stock.product_name}</td>
+                            <td class="px-6 py-4">${stock.warehouse}</td>
                             <td class="px-6 py-4">
-                                <div class="w-full bg-gray-200 rounded-full h-4 relative">
-                                    <div class="${colorClass} h-4 rounded-full" style="width: ${Math.min(percent, 100)}%"></div>
-                                    <span class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xs font-semibold text-white">
+                                <div class="w-full bg-gray-200 rounded-full h-5 relative overflow-hidden">
+                                    <div class="${colorClass} h-5 rounded-full" style="width: ${Math.min(percent, 100)}%"></div>
+                                    <span class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 p-3 text-xs font-semibold text-white whitespace-nowrap">
                                         ${stock.quantity} / ${stock.max_quantity}
                                     </span>
                                 </div>
@@ -103,6 +104,9 @@
                             <td class="px-6 py-4">
                                 <div class="flex flex-row gap-2 items-center">
                                     <a href="${STOCK_CHANGE_URL}" class="flex flex-row items-center gap-1 font-medium text-blue-600 dark:text-blue-500 cursor-pointer hover:text-gray-400"><i class="material-icons">sync_alt</i>Adjust Stock</a>
+                                    <a href="${STOCK_SETTINGS_URL}" class="flex flex-row items-center gap-1 font-medium text-blue-600 dark:text-blue-500 cursor-pointer hover:text-gray-400">
+                                        <i class="material-icons">tune</i>Settings
+                                    </a>
                                     <a href="${STOCK_LOG_URL}" class="flex flex-row items-center gap-1 font-medium text-blue-600 dark:text-blue-500 cursor-pointer hover:text-gray-400"><i class="material-icons">history</i>STOCK LOGS</a>
                                 </div>
                             </td>

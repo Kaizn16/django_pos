@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from point_of_sale.decorators import role_required
-from .models import Product, Stock, StockLog
+from .models import Product, Stock, StockLog, Warehouse
 from django.db.models import Q
 from django.http import HttpResponse
 from django.contrib import messages
@@ -20,26 +20,32 @@ def inventory(request):
 @role_required('administrator', 'manager')
 def add_product_stock(request):
     products = Product.objects.all()
+    warehouses = Warehouse.objects.all()
 
     data = {
-        'products': products
+        'products': products,
+        'warehouses': warehouses,
     }
 
     if request.method == 'POST':
         try:
             product_id = request.POST.get('product')
             quantity = int(request.POST.get('quantity'))
+            warehouse_id = request.POST.get('warehouse')
+
             if quantity <= 0:
                 messages.error(request, 'Quantity must be greater than zero.')
                 return render(request, 'pages/inventory/product_stock_form.html', data)
 
             product = get_object_or_404(Product, pk=product_id)
+            warehouse = get_object_or_404(Warehouse, pk=warehouse_id)
 
             with transaction.atomic():
-                stock, created = Stock.objects.get_or_create(product=product)
+                stock, created = Stock.objects.get_or_create(product=product, warehouse=warehouse)
 
                 StockLog.objects.create(
                     stock=stock,
+                    warehouse=warehouse,
                     change=quantity,
                     type='in',
                     reason='Initial stock added' if created else 'Product stock added'
@@ -82,6 +88,7 @@ def fetch_stocks(request):
                 'max_quantity': stock.max_quantity,
                 'product_id': stock.product_id,
                 'product_name': stock.product.product_name,
+                'warehouse': stock.warehouse.name,
             })
 
         return JsonResponse({
@@ -147,6 +154,41 @@ def adjust_stock(request, id=None):
 
     return render(request, 'pages/inventory/adjust_stock_form.html', data)
 
+@login_required
+@role_required('administrator', 'manager')
+def stock_settings(request, id=None):
+    warehouses = Warehouse.objects.all()
+    stock = get_object_or_404(Stock.objects.select_related('product', 'warehouse'), pk=id)
+
+    if request.method == 'POST':
+        opening_stock = request.POST.get('opening_stock')
+        warehouse_id = request.POST.get('warehouse')
+
+        try:
+            opening_stock = int(opening_stock)
+            warehouse_id = int(warehouse_id)
+        except (TypeError, ValueError):
+            messages.error(request, "Invalid input.")
+            return redirect(request.path)
+
+        existing = Stock.objects.filter(product=stock.product, warehouse_id=warehouse_id).exclude(pk=stock.pk).exists()
+
+        if existing:
+            messages.error(request, "This product already exists in the selected warehouse.")
+        else:
+            # Update stock
+            stock.opening_stock = opening_stock
+            stock.warehouse_id = warehouse_id
+            stock.save()
+            messages.success(request, "Stock updated successfully.")
+            return redirect('inventory:inventory')
+
+    data = {
+        'stock': stock,
+        'warehouses': warehouses,
+    }
+
+    return render(request, 'pages/inventory/stock_settings.html', data)
 
 @login_required
 @role_required('administrator', 'manager')

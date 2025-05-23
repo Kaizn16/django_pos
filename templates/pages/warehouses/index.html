@@ -1,11 +1,11 @@
 {% extends "layouts/base.html" %}
-{% block 'title' %} Products {% endblock 'title' %}
+{% block 'title' %} Warehouse {% endblock 'title' %}
 {% block 'content' %}
-    <h1 class="text-3xl font-bold">Product Management</h1>
+    <h1 class="text-3xl font-bold">Warehouse Management</h1>
     <section class="w-full h-auto p-2 flex flex-col gap-3">
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg dark:bg-gray-900">
             <header class="flex flex-col md:flex-row md:justify-between gap-4 p-3 md:items-center dark:bg-gray-900">
-                <h2 class="text-2xl text-white">Product List</h2>
+                <h2 class="text-2xl text-white">Warehouse List</h2>
                 
                 <div class="flex flex-col sm:flex-row sm:items-center gap-2">
                     <label for="search" class="sr-only">Search</label>
@@ -16,13 +16,13 @@
                             </svg>
                         </div>
                         <input type="text" id="search" 
-                            class="block w-full sm:w-80 p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                            class="block w-full sm:w-80 p-2 ps-10 text-sm text-gray-900 border bordper-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
                             placeholder="Search">
                     </div>
 
-                    <a href="{% url 'products:product.add' %}" 
+                    <a href="{% url 'warehouses:warehouse.add' %}" 
                         class="block text-center py-2 px-4 rounded transition bg-blue-400 text-white font-bold hover:bg-blue-500 hover:text-white">
-                        Add Product
+                        Add Warehouse
                     </a>
                 </div>
             </header>
@@ -30,13 +30,10 @@
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
                         <th scope="col" class="px-6 py-3">
-                            Product
+                            Store Name
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Buying Price
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Selling Price
+                            Location
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Status
@@ -71,7 +68,7 @@
         </div>
 
     </section>
-    <script>
+     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const searchInput = document.getElementById('search');
             const tableBody = document.getElementById('data-table');
@@ -81,46 +78,34 @@
             let currentSearch = '';
             let debounceTimer;
 
-            function fetchProducts(page = 1, search = '') {
-                fetch(`/api/products?page=${page}&search=${search}`)
+            function fetchWarehouses(page = 1, search = '') {
+                fetch(`/api/warehouses?page=${page}&search=${search}`)
                     .then(response => response.json())
                     .then(data => {
-                        renderProducts(data.products);
+                        renderWarehouses(data.warehouses);
                         renderPagination(data.current_page, data.num_pages);
                     });
             }
 
-            function renderProducts(products) {
+            function renderWarehouses(warehouses) {
                 tableBody.innerHTML = '';
-                products.forEach(product => {
+                warehouses.forEach(warehouse => {
 
-                    const EDIT_URL = `products/edit/${product.id}`;
-                    const productImage = product.product_image ? product.product_image : '/static/images/default-product.png'; // Default Product Image
+                    const EDIT_URL = `warehouses/edit/${warehouse.id}`;
 
                     const row = `
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
-                            <th scope="row" class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
-                                 <img 
-                                {% load static %}
-                                src="${productImage}" alt="Product Image"
-                                alt="Product Image Preview" 
-                                class="bg-white" style="max-width: 48px;clip-path: circle();">
-                                <div class="ps-3">
-                                    <div class="text-base font-semibold">${product.product_name}</div>
-                                    <div class="font-normal text-gray-500">Category: ${product.category}</div>
-                                </div>
-                            </th>
-                            <td class="px-6 py-4">₱ ${product.buying_price}</td>
-                            <td class="px-6 py-4">₱ ${product.selling_price}</td>
+                            <td class="px-6 py-4">${warehouse.name}</td>
+                            <td class="px-6 py-4">${warehouse.location}</td>
                             <td class="px-6 py-4">
-                                <div class="font-semibold ${product.status == 1 ? 'text-green-500' : 'text-red-600'}">
-                                    ${product.status ? 'Active' : 'Inactive'}
+                                <div class="font-semibold ${warehouse.status == 1 ? 'text-green-500' : 'text-red-600' }">
+                                    ${warehouse.status == 1 ? 'Active' : 'Inactive'}
                                 </div>
                             </td>
                             <td class="px-6 py-4">
                                 <div class="flex flex-row gap-2 items-center">
                                     <a href="${EDIT_URL}" class="flex flex-row item-center gap-1 font-medium text-blue-600 dark:text-blue-500 cursor-pointer hover:text-gray-400"><i class="material-icons">edit</i>EDIT</a>
-                                    <button type="button" data-product-id="${product.id}" class="delete-btn flex flex-row items-center gap-1 font-medium text-red-700 dark:text-red-600 cursor-pointer hover:text-gray-400"><i class="material-icons">delete</i>DELETE</button>   
+                                    <button type="button" data-warehouse-id="${warehouse.id}" class="delete-btn flex flex-row items-center gap-1 font-medium text-red-700 dark:text-red-600 cursor-pointer hover:text-gray-400"><i class="material-icons">delete</i>DELETE</button>   
                                 </div>
                             </td>
                         </tr>
@@ -138,7 +123,7 @@
                     btn.textContent = i;
                     btn.addEventListener('click', () => {
                         currentPage = i;
-                        fetchProducts(currentPage, currentSearch);
+                        fetchWarehouses(currentPage, currentSearch);
                     });
                     pagination.appendChild(btn);
                 }
@@ -151,11 +136,11 @@
                 debounceTimer = setTimeout(() => {
                     currentSearch = searchInput.value;
                     currentPage = 1;
-                    fetchProducts(currentPage, currentSearch);
+                    fetchWarehouses(currentPage, currentSearch);
                 }, 600);
             });
 
-            fetchProducts();
+            fetchWarehouses();
 
             let selectedProductId = null;
 

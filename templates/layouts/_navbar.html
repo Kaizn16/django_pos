@@ -13,15 +13,50 @@
     <div class="flex-grow"></div>
     <section class="flex row gap-3 items-center">
 
-        
         <section class="relative">
             <button id="notificationBtn" class="relative cursor-pointer hover:text-gray-400">
                 <i class="material-icons">notifications</i>
             </button>
 
-            <div id="notificationDropdown" class="hidden absolute right-0 mt-2 p-2 w-64 bg-white rounded-md shadow-lg text-gray-800 z-50">
-                <p>test</p>
+            <div id="notificationDropdown" class="hidden fixed right-0 mt-2 w-72 bg-white rounded-xl shadow-2xl text-gray-800 sm:absolute sm:right-0 sm:mt-2 z-50">
+                <header class="px-4 py-3 border-b border-gray-200 bg-gray-50 rounded-t-xl">
+                    <h1 class="text-lg font-bold text-gray-900">Notifications</h1>
+                </header>
+                
+                <ul class="max-h-60 overflow-y-auto divide-y divide-gray-100">
+                    <!-- Notification items (example) -->
+                    <li class="px-4 py-3 hover:bg-gray-100 transition-colors cursor-pointer">
+                        <p class="text-sm font-medium text-gray-800">Low Stock: <span class="text-red-600">Milk</span></p>
+                        <p class="text-xs text-gray-500 mt-1">Only 3 left in inventory</p>
+                    </li>
+                    <li class="px-4 py-3 hover:bg-gray-100 transition-colors cursor-pointer">
+                        <p class="text-sm font-medium text-gray-800">New Order #20391</p>
+                        <p class="text-xs text-gray-500 mt-1">Placed 2 minutes ago</p>
+                    </li>
+                    <li class="px-4 py-3 hover:bg-gray-100 transition-colors cursor-pointer">
+                        <p class="text-sm font-medium text-gray-800">Payment Failed</p>
+                        <p class="text-xs text-gray-500 mt-1">Card declined</p>
+                    </li>
+                    <li class="px-4 py-3 hover:bg-gray-100 transition-colors cursor-pointer">
+                        <p class="text-sm font-medium text-gray-800">New Staff Login</p>
+                        <p class="text-xs text-gray-500 mt-1">POS Terminal #2</p>
+                    </li>
+                    <li class="px-4 py-3 hover:bg-gray-100 transition-colors cursor-pointer">
+                        <p class="text-sm font-medium text-gray-800">Cash Drawer Opened</p>
+                        <p class="text-xs text-gray-500 mt-1">Checked by John</p>
+                    </li>
+                    <!-- Additional notifications will now trigger scrolling -->
+                    <li class="px-4 py-3 hover:bg-gray-100 transition-colors cursor-pointer">
+                        <p class="text-sm font-medium text-gray-800">Shift Ending Soon</p>
+                        <p class="text-xs text-gray-500 mt-1">Maria - 5:30 PM</p>
+                    </li>
+                </ul>
+
+                <footer class="px-4 py-2 border-t border-gray-200 bg-gray-50 text-center rounded-b-xl">
+                    <a href="#" class="text-sm text-blue-600 hover:underline font-medium">View All Notifications</a>
+                </footer>
             </div>
+
         </section>
 
         <section class="relative">

@@ -54,11 +54,11 @@
                 </a>
             </li>
             <li>
-                <a href="" 
+                <a href="{% url 'warehouses:warehouses' %}" 
                 class="flex items-center gap-2 py-2 px-4 rounded transition
-                {% if request.resolver_match.url_name == 'warehouse' or request.resolver_match.url_name == 'warehouse.add_warehouse' or request.resolver_match.url_name == 'warehouse.edit_warehouse' %}bg-blue-400 text-white font-bold{% else %}hover:bg-blue-400 hover:text-gray-900{% endif %}">
+                {% if request.resolver_match.url_name == 'warehouses' or request.resolver_match.url_name == 'warehouse.add' %}bg-blue-400 text-white font-bold{% else %}hover:bg-blue-400 hover:text-gray-900{% endif %}">
                 <i class="material-icons">warehouse</i>
-                warehouse
+                Warehouses
                 </a>
             <li>
                 <a href="{% url 'users:users' %}" 

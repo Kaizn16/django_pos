@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from products.models import Product
-from warehouse.models import Warehouse
+from warehouses.models import Warehouse
 
 class Stock(models.Model):
     class Meta:

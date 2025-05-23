@@ -29,8 +29,9 @@ def add_product(request):
             product_name = request.POST.get('product_name')
             category_id = request.POST.get('category')
             description = request.POST.get('description')
-            buying_price = request.POST.get('buying_price')
             selling_price = request.POST.get('selling_price')
+            buying_price = request.POST.get('buying_price')
+            low_stock_threshold = request.POST.get('low_stock_threshold')
             sku = request.POST.get('sku')
             barcode = request.POST.get('barcode')
 
@@ -39,8 +40,9 @@ def add_product(request):
                 'product_name': product_name,
                 'category': category_id,
                 'description': description,
-                'buying_price': buying_price,
                 'selling_price': selling_price,
+                'buying_price': buying_price,
+                'low_stock_threshold': low_stock_threshold,
                 'sku': sku,
                 'barcode': barcode,
             }
@@ -57,8 +59,9 @@ def add_product(request):
                     'product_name': product_name,
                     'category': Category.objects.get(pk=category_id),
                     'description': description,
-                    'buying_price': buying_price,
                     'selling_price': selling_price,
+                    'buying_price': buying_price,
+                    'low_stock_threshold': low_stock_threshold,
                     'sku': sku,
                     'barcode': barcode,
                 }
@@ -111,8 +114,10 @@ def edit_product(request, id=None):
         'description': product.description,
         'selling_price': product.selling_price,
         'buying_price': product.buying_price,
+        'low_stock_threshold': product.low_stock_threshold,
         'sku': product.sku,
         'barcode': product.barcode,
+        'status': product.status,
     }
 
     data = {
@@ -132,16 +137,20 @@ def update_product(request, id=None):
             product_name = request.POST.get('product_name')
             category_id = request.POST.get('category')
             description = request.POST.get('description')
-            buying_price = request.POST.get('buying_price')
             selling_price = request.POST.get('selling_price')
+            buying_price = request.POST.get('buying_price')
+            low_stock_threshold = request.POST.get('low_stock_threshold')
             sku = request.POST.get('sku')
             barcode = request.POST.get('barcode')
-            product_image = request.FILES.get('product_image')  
+            product_image = request.FILES.get('product_image')
+            status = request.POST.get('status') == 'on'  
 
             product.product_name = product_name
             product.category = Category.objects.get(pk=category_id)
-            product.buying_price = buying_price
             product.selling_price = selling_price
+            product.buying_price = buying_price
+            product.low_stock_threshold = low_stock_threshold
+            product.status = status
 
             if product_name != product.product_name:
                 product.product_name = product_name
@@ -222,8 +231,9 @@ def fetch_products(request):
                 'product_image': product.product_image.url if product.product_image else None,
                 'product_name': product.product_name,
                 'category': getattr(product.category, 'category_name', 'N/A'),
-                'buying_price': product.buying_price,
                 'selling_price': product.selling_price,
+                'buying_price': product.buying_price,
+                'low_stock_threshold': product.low_stock_threshold,
                 'status': product.status,
             })
 
