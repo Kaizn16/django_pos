@@ -5,7 +5,7 @@
     <h1 class="text-2xl font-bold mb-6">Dashboard</h1>
     <section class="w-full h-auto p-2">
         
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+        <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-col-4 gap-6 mb-6">
             <!-- Daily Sales Card -->
             <div class="flex items-center bg-green-100 shadow-md rounded-2xl p-6">
                 <span class="material-icons text-green-600 text-4xl mr-5">shopping_cart</span>
@@ -43,14 +43,14 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mt-6 shadow-md rounded-2xl">
+        <div class="grid grid-cols-1 lg:grid-cols-2 md:grid-cols-1 gap-6 md:gap-8 mt-6">
             <!-- Top Categories Chart -->
-            <div class="w-full min-h-[384px]">
+            <div class="w-full min-h-[384px] shadow-md rounded-2xl">
                 <div id="topCategoriesChart" class="w-full h-full"></div>
             </div>
 
             <!-- Product Sales Chart -->
-            <div class="w-full min-h-[384px]">
+            <div class="w-full min-h-[384px] shadow-md rounded-2xl">
                 <div id="productSalesChart" class="w-full h-full"></div>
             </div>
         </div>

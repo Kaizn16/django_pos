@@ -20,7 +20,7 @@
                         Login
                     </h1>
                     {% if form.errors %}
-                        <p class="text-sm text-red-500">Invalid credentials</p>
+                        <p class="text-sm text-red-500 w-full text-center">Invalid credentials</p>
                     {% endif %}
 
                     <form class="flex flex-col gap-4" action="{% url 'login:login' %}" method="post">
@@ -28,7 +28,7 @@
                         <input type="hidden" name="next" value="{{ next }}">
 
                         <div>
-                            <label for="id_username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Username</label>
+                            <label for="id_username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Username or Email</label>
                             <input type="text" name="username" id="id_username"
                                    value="{{ form.username.value|default_if_none:'' }}"
                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 

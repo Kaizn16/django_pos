@@ -109,6 +109,7 @@ def edit_user(request, id=None):
         'username': user.username,
         'email': user.email,
         'role': str(user.role.role_id),
+        'is_active': user.is_active,
     }
 
     data = {
@@ -131,10 +132,12 @@ def update_user(request, id=None):
             role_id = request.POST.get('role')
             password = request.POST.get('password')
             confirm_password = request.POST.get('confirm_password')
-            profile = request.FILES.get('profile')  
+            profile = request.FILES.get('profile')
+            is_active = request.POST.get('is_active') == 'on'  
 
             user.full_name = full_name
             user.role = Role.objects.get(pk=role_id)
+            user.is_active = is_active
 
             if username != user.username:
                 user.username = username
