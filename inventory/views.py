@@ -8,7 +8,11 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.core.paginator import Paginator
 from django.db import transaction
+from django.conf import settings
+import requests
 # Create your views here.
+
+MAKE_WEBHOOK_URL = 'YOURMAKEWEBHOOK'
 
 @login_required
 @role_required('administrator', 'manager')
@@ -136,14 +140,31 @@ def adjust_stock(request, id=None):
                 stock.save()
 
                 # Log the stock change
-                StockLog.objects.create(
+                log = StockLog.objects.create(
                     stock=stock,
                     change=change,
                     type=type_,
                     reason=reason,
                     reference_type='adjustment',
-                    reference_id=None
+                    reference_id=None,
+                    stock_id=stock.id,
+                    warehouse_id=stock.warehouse_id,
                 )
+
+                payload = {
+                    'id': log.id,
+                    'change': log.change,
+                    'type': log.type,
+                    'reason': log.reason,
+                    'reference_type': log.reference_type,
+                    'reference_id': log.reference_id,
+                    'stock_id': log.stock_id,
+                    'warehouse_id': log.warehouse_id,
+                    'created_at': log.created_at.isoformat(),
+                    'updated_at': log.updated_at.isoformat(),
+                }
+                requests.post(MAKE_WEBHOOK_URL, json=payload)
+                
 
             messages.success(request, "Stock updated successfully.")
             return redirect('inventory:inventory')
