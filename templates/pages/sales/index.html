@@ -17,13 +17,13 @@
           <section class="mt-5 px-5">
             <div class="flex flex-col sm:flex-row sm:items-center gap-4">
               <!-- Scrollable category list -->
-              <div class="relative w-52 sm:w-80">
+              <div class="relative w-full sm:w-52 md:w-full">
                 <!-- Left Arrow -->
                 <div id="leftArrow" class="absolute left-0 top-1/2 -translate-y-1/2 z-10 dark:bg-gray-500 text-white p-1 rounded-full shadow hidden cursor-pointer">
                   <i class="material-icons">chevron_left</i>
                 </div>  
 
-                <div id="categoryScroll" class="flex overflow-x-auto gap-2 sm:gap-4 p-4 scrollbar-thin scrollbar-thumb-gray-200 scroll-smooth w-52 sm:w-80">
+                <div id="categoryScroll" class="flex overflow-x-auto gap-2 sm:gap-4 p-4 scrollbar-thin scrollbar-thumb-gray-200 scroll-smooth sm:w-52 md:w-full w-full">
                   <span data-category="all" class="whitespace-nowrap px-5 py-1 dark:bg-gray-500 rounded-2xl text-white text-sm mr-1 cursor-pointer">All items</span>
                   {% for category in categories %}
                   <span data-category="{{ category.category_id }}" class="whitespace-nowrap px-5 py-1 rounded-2xl text-sm font-semibold mr-1 cursor-pointer">{{ category.category_name }}</span>
@@ -197,6 +197,53 @@
         </div>
         <!-- end right section -->
     </div>
+
+    <!--ADDING CART MODAL-->
+    <div id="productSelectModal" class="fixed inset-0 z-50 hidden flex items-center justify-center" style="background: rgba(0, 0, 0, 0.8);">
+      <div class="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md shadow-lg">
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-white">Product Selected</h2>
+        <form id="productSelectForm" class="mt-4 space-y-4" method="post" action="">
+          <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+          <input type="hidden" id="selectedProductId" name="product_id">
+          <div class="flex flex-col gap-3 mb-6">
+            <div class="w-full flex justify-center items-center">
+              <img src="" id="selectedProductImage" alt="Selected Product Preview" class="w-32 h-32">
+            </div>
+            <section>
+              <div class="dark:text-white flex gap-1">
+                <strong>Name:</strong> 
+                <p id="selectedProductName" class="font-light"></p>
+              </div>
+              <div class="dark:text-white flex gap-1">
+                <strong>Category:</strong> 
+                <p id="selectedProductCategory" class="font-light"></p>
+              </div>
+              <div class="dark:text-white flex gap-1">
+                <strong>Price:</strong> 
+                <p id="selectedProductPrice" class="font-light"></p>
+              </div>
+            </section>
+          </div>
+          <div class="mb-6">
+            <label for="productQuantity" class="block text-gray-700 dark:text-gray-300 text-sm font-medium mb-1">Quantity</label>
+            <input type="number" id="productQuantity" name="quantity" min="1" required
+              class="w-full px-3 py-2 border border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+          </div>
+          <div class="flex justify-end gap-2">
+            <button type="button" id="cancelProductSelect"
+              class="px-4 py-2 bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-white rounded hover:bg-gray-400">
+              Cancel
+            </button>
+            <button type="submit"
+              class="flex items-center px-4 py-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-600">
+              <i class="material-icons">shopping_cart</i> Add to Cart
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!--ADDING CART MODAL-->
+
 </section>
 <script>
   const scrollContainer = document.getElementById("categoryScroll");
@@ -222,7 +269,11 @@
   window.addEventListener('load', updateArrows);
 </script>
 <script>
-  async function renderProducts() {
+  let currentSearch = '';
+  let currentCategory = '';
+  let currentPage = 1; // If you need pagination
+
+  async function renderProducts(search = '', category = '') {
     const loader = document.getElementById("loader");
     const productGrid = document.getElementById("product-grid");
 
@@ -230,26 +281,36 @@
     productGrid.classList.add("hidden");
     productGrid.innerHTML = '';
 
+    const query = new URLSearchParams({
+      search: search,
+      category: category,
+    });
+
     try {
-      const response = await fetch('/api/sales/products');
+      const response = await fetch(`/api/sales/products?${query.toString()}`);
       const products = await response.json();
+
+      if (!products.length) {
+        productGrid.innerHTML = `<p class="text-center w-full text-gray-500">No products found.</p>`;
+      }
 
       products.forEach(product => {
         const productCard = document.createElement('div');
         productCard.className = 'relative px-3 py-3 flex flex-col border border-gray-200 rounded-md h-32 justify-between cursor-pointer hover:bg-gray-300';
+        productCard.dataset.productData = JSON.stringify(product);
 
         const STOCK_PERCENTAGE = (product.stock / product.max_stock) * 100;
 
         let colorClass = '';
 
-        if (STOCK_PERCENTAGE >= 80 && STOCK_PERCENTAGE === 100) {
-            colorClass = 'bg-green-500';
+        if (STOCK_PERCENTAGE === 100 || STOCK_PERCENTAGE >= 80) {
+          colorClass = 'bg-green-500';
         } else if (STOCK_PERCENTAGE > 10 && STOCK_PERCENTAGE <= 50) {
-            colorClass = 'bg-yellow-400';
+          colorClass = 'bg-yellow-400';
         } else if (STOCK_PERCENTAGE > 0 && STOCK_PERCENTAGE <= 10) {
-            colorClass = 'bg-red-500';
+          colorClass = 'bg-red-500';
         } else {
-            colorClass = 'dark:bg-gray-500';
+          colorClass = 'dark:bg-gray-500';
         }
 
         productCard.innerHTML = `
@@ -261,11 +322,27 @@
           </div>
           <div class="flex flex-row justify-between items-center">
             <span class="self-end font-bold text-lg dark:text-gray-500">₱${product.price}</span>
-            <img src="${product.image || '/static/images/default-product.png'}" class="h-14 w-14 object-cover rounded-md" alt="${product.name}">
+            <img src="${product.image || '/static/images/default-product.png'}" class="h-14 w-14 object-cover rounded-md" alt="${product.product_name}">
           </div>
         `;
 
         productGrid.appendChild(productCard);
+
+        // Product click handler
+        productCard.addEventListener('click', () => {
+            const productData = JSON.parse(productCard.dataset.productData);
+
+            document.getElementById("selectedProductId").value = productData.id;
+            document.getElementById("selectedProductImage").src = productData.image;
+            document.getElementById("selectedProductName").innerHTML = productData.product_name;
+            document.getElementById("selectedProductCategory").innerHTML = productData.category;
+            document.getElementById("selectedProductPrice").innerHTML = productData.price;
+            document.getElementById("productQuantity").value = '';
+
+            // Show the modal
+            document.getElementById("productSelectModal").classList.remove("hidden");
+        });
+
       });
 
       loader.classList.add("hidden");
@@ -279,6 +356,56 @@
     }
   }
 
-  document.addEventListener("DOMContentLoaded", renderProducts);
+  const searchInput = document.getElementById('search');
+  const categoryItems = document.querySelectorAll("#categoryScroll span");
+  let debounceTimer;
+
+  // Debounced Search Input
+  searchInput.addEventListener('input', () => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      currentSearch = searchInput.value.trim();
+      currentPage = 1;
+      renderProducts(currentSearch, currentCategory);
+    }, 600);
+  });
+
+  // Category click handler when selected
+  categoryItems.forEach((item) => {
+    item.addEventListener("click", function () {
+      currentCategory = this.getAttribute("data-category");
+
+      // Highlight the selected category
+      categoryItems.forEach(el => el.classList.remove("dark:bg-gray-500", "text-white"));
+      this.classList.add("dark:bg-gray-500", "text-white");
+
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        renderProducts(currentSearch, currentCategory);
+      }, 600);
+    });
+  });
+
+  // Intialized load products
+  document.addEventListener("DOMContentLoaded", () => {
+    renderProducts();
+  });
+
+  document.getElementById("cancelProductSelect").addEventListener("click", () => {
+    document.getElementById("productSelectModal").classList.add("hidden");
+  });
+
+  document.getElementById("productSelectForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    
+    const productId = document.getElementById("selectedProductId").value;
+    const quantity = document.getElementById("productQuantity").value;
+
+    console.log("Selected Product:", productId, "Quantity:", quantity);
+    document.getElementById("productSelectModal").classList.add("hidden");
+
+    renderProducts();
+  });
+
 </script>
 {% endblock 'content' %}

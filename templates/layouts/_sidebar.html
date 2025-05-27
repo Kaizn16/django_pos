@@ -21,6 +21,9 @@
                 Dashboard
                 </a>
             </li>
+            
+            <!-- CASHIER ONLY -->
+            {% if request.user.role.role_type == 'cashier' %}
             <li>
                 <a href="{% url 'sales:sales' %}" 
                 class="flex items-center gap-2 py-2 px-4 rounded transition
@@ -29,6 +32,9 @@
                 Sales   
                 </a>
             </li>
+            {% endif %}
+            <!-- CASHIER ONLY -->
+
             <li>
                 <a href="{% url 'products:products' %}" 
                 class="flex items-center gap-2 py-2 px-4 rounded transition

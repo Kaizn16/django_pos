@@ -1,4 +1,6 @@
 <header class="w-full flex items-center h-16 bg-gray-900 text-white px-6 py-3 shadow-md sticky top-0 z-50">
+
+    {% if request.user.role.role_type != "cashier" %}
     <!-- Toggle Button (only visible on mobile) -->
     <section class="md:hidden">
         <button id="sidebarToggle" class="bg-blue-400 p-2 rounded-md focus:outline-none">
@@ -10,6 +12,7 @@
             </svg>
         </button>
     </section>
+    {% endif %}
     <div class="flex-grow"></div>
     <section class="flex row gap-3 items-center">
 

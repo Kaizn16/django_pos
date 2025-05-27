@@ -15,6 +15,6 @@ def role_required(*allowed_roles):
                 return redirect('sales:sales')
             
             messages.error(request, "You do not have permission to access this page.!")
-            return redirect('login:dashboard')
+            return redirect(request.META.get('HTTP_REFERER', 'login:dashboard'))
         return _wrapped_view
     return decorator

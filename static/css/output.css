@@ -62,6 +62,7 @@
     --text-3xl--line-height: calc(2.25 / 1.875);
     --text-4xl: 2.25rem;
     --text-4xl--line-height: calc(2.5 / 2.25);
+    --font-weight-light: 300;
     --font-weight-normal: 400;
     --font-weight-medium: 500;
     --font-weight-semibold: 600;
@@ -477,9 +478,6 @@
   .w-32 {
     width: calc(var(--spacing) * 32);
   }
-  .w-52 {
-    width: calc(var(--spacing) * 52);
-  }
   .w-64 {
     width: calc(var(--spacing) * 64);
   }
@@ -831,6 +829,12 @@
   .ps-10 {
     padding-inline-start: calc(var(--spacing) * 10);
   }
+  .pr-3 {
+    padding-right: calc(var(--spacing) * 3);
+  }
+  .pr-10 {
+    padding-right: calc(var(--spacing) * 10);
+  }
   .pl-3 {
     padding-left: calc(var(--spacing) * 3);
   }
@@ -882,6 +886,10 @@
   .font-bold {
     --tw-font-weight: var(--font-weight-bold);
     font-weight: var(--font-weight-bold);
+  }
+  .font-light {
+    --tw-font-weight: var(--font-weight-light);
+    font-weight: var(--font-weight-light);
   }
   .font-medium {
     --tw-font-weight: var(--font-weight-medium);
@@ -1164,6 +1172,11 @@
       display: inline;
     }
   }
+  .sm\:w-52 {
+    @media (width >= 40rem) {
+      width: calc(var(--spacing) * 52);
+    }
+  }
   .sm\:w-80 {
     @media (width >= 40rem) {
       width: calc(var(--spacing) * 80);
@@ -1237,6 +1250,11 @@
   .md\:min-h-screen {
     @media (width >= 48rem) {
       min-height: 100vh;
+    }
+  }
+  .md\:w-full {
+    @media (width >= 48rem) {
+      width: 100%;
     }
   }
   .md\:translate-x-0 {
@@ -1424,6 +1442,11 @@
       }
     }
   }
+  .dark\:ring-offset-gray-800 {
+    @media (prefers-color-scheme: dark) {
+      --tw-ring-offset-color: var(--color-gray-800);
+    }
+  }
   .dark\:hover\:bg-blue-700 {
     @media (prefers-color-scheme: dark) {
       &:hover {
@@ -1471,6 +1494,13 @@
     @media (prefers-color-scheme: dark) {
       &:focus {
         --tw-ring-color: var(--color-blue-500);
+      }
+    }
+  }
+  .dark\:focus\:ring-blue-600 {
+    @media (prefers-color-scheme: dark) {
+      &:focus {
+        --tw-ring-color: var(--color-blue-600);
       }
     }
   }

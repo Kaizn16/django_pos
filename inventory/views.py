@@ -12,7 +12,6 @@ from django.conf import settings
 import requests
 # Create your views here.
 
-MAKE_WEBHOOK_URL = 'YOURMAKEWEBHOOK'
 
 @login_required
 @role_required('administrator', 'manager')
@@ -150,21 +149,6 @@ def adjust_stock(request, id=None):
                     stock_id=stock.id,
                     warehouse_id=stock.warehouse_id,
                 )
-
-                payload = {
-                    'id': log.id,
-                    'change': log.change,
-                    'type': log.type,
-                    'reason': log.reason,
-                    'reference_type': log.reference_type,
-                    'reference_id': log.reference_id,
-                    'stock_id': log.stock_id,
-                    'warehouse_id': log.warehouse_id,
-                    'created_at': log.created_at.isoformat(),
-                    'updated_at': log.updated_at.isoformat(),
-                }
-                requests.post(MAKE_WEBHOOK_URL, json=payload)
-                
 
             messages.success(request, "Stock updated successfully.")
             return redirect('inventory:inventory')

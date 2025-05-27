@@ -21,6 +21,8 @@ class CustomUserManager(UserManager):
             raise ValueError("You have not provided a valid email address")
         if not full_name:
             raise ValueError("Full name is required")
+        if not password:
+            raise ValueError("Password is required!")
         
         email = self.normalize_email(email)
         
