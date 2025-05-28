@@ -41,12 +41,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "django_browser_reload", # for auto reload page development
-    'login',
-    'users',
-    'sales',
-    'products',
-    'inventory',
-    'warehouses',
+    # Custom Apps
+    'apps.login.apps.LoginConfig',
+    'apps.users.apps.UsersConfig',
+    'apps.sales.apps.SalesConfig',
+    'apps.products.apps.ProductsConfig',
+    'apps.inventory.apps.InventoryConfig',
+    'apps.warehouses.apps.WarehousesConfig',
 ]
 
 AUTH_USER_MODEL = 'users.user'
@@ -99,7 +100,7 @@ DATABASES = {
 
 # username and email validation
 AUTHENTICATION_BACKENDS = [
-    'login.backends.UsernameOrEmailBackend',
+    'apps.login.backends.UsernameOrEmailBackend',
 ]
 
 # Password validation

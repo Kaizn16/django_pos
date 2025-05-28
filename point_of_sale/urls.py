@@ -22,12 +22,12 @@ from django.conf import settings
 
 urlpatterns = [
     path("__reload__/", include("django_browser_reload.urls")), # auto reload page development
-    path('', include('login.urls', namespace='login')),
-    path('', include('users.urls', namespace='users')),
-    path('', include('sales.urls', namespace='sales')),
-    path('', include('products.urls', namespace='products')),
-    path('', include('inventory.urls', namespace='inventory')),
-    path('', include('warehouses.urls', namespace='warehouses')),
+    path('', include('apps.login.urls', namespace='login')),
+    path('', include('apps.users.urls', namespace='users')),
+    path('', include('apps.sales.urls', namespace='sales')),
+    path('', include('apps.products.urls', namespace='products')),
+    path('', include('apps.inventory.urls', namespace='inventory')),
+    path('', include('apps.warehouses.urls', namespace='warehouses')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

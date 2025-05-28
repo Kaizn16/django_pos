@@ -6,7 +6,6 @@
             <img src="{% static 'images/App-Logo.png' %}" alt="App Logo" class="rounded-full" style="max-width: 42px;">
             <strong>P.O.S</strong>
         </a>
-        <!-- Close Button (Mobile only) -->
         <button id="closeSidebar" class="md:hidden text-white focus:outline-none">
             ✕
         </button>
@@ -22,7 +21,6 @@
                 </a>
             </li>
             
-            <!-- CASHIER ONLY -->
             {% if request.user.role.role_type == 'cashier' %}
             <li>
                 <a href="{% url 'sales:sales' %}" 
@@ -33,46 +31,70 @@
                 </a>
             </li>
             {% endif %}
-            <!-- CASHIER ONLY -->
+            <li x-data="{ open: {% if 'products' in request.resolver_match.view_name or 'categories' in request.resolver_match.view_name %} true {% else %} false {% endif %} }">
+                <button @click="open = !open" class="w-full flex justify-between items-center gap-2 py-2 px-4 rounded transition hover:bg-blue-400 hover:text-gray-900 focus:outline-none">
+                    <span class="flex items-center gap-2">
+                        <i class="material-icons">view_in_ar</i>
+                        Product Management
+                    </span>
+                    <i class="material-icons" x-text="open ? 'expand_less' : 'expand_more'"></i>
+                </button>
+                <ul x-show="open" class="space-y-2 mt-2 ml-4">
+                    <li>
+                        <a href="{% url 'products:products' %}" class="flex items-center gap-2 py-2 px-4 rounded transition {% if request.resolver_match.url_name == 'products' or request.resolver_match.url_name == 'product.add' or request.resolver_match.url_name == 'product.edit' %}bg-blue-400 text-white font-bold{% else %}hover:bg-blue-400 hover:text-gray-900{% endif %}">
+                            <i class="material-icons">list</i>
+                            Product List
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'products:categories' %}" class="flex items-center gap-2 py-2 px-4 rounded transition {% if request.resolver_match.url_name == 'categories' or request.resolver_match.url_name == 'category.add' or request.resolver_match.url_name == 'category.edit' %}bg-blue-400 text-white font-bold{% else %}hover:bg-blue-400 hover:text-gray-900{% endif %}">
+                            <i class="material-icons">category</i>
+                            Categories
+                        </a>
+                    </li>
+                </ul>
+            </li>
 
-            <li>
-                <a href="{% url 'products:products' %}" 
-                class="flex items-center gap-2 py-2 px-4 rounded transition
-                {% if request.resolver_match.url_name == 'products' or request.resolver_match.url_name == 'product.add' or request.resolver_match.url_name == 'product.edit' %}bg-blue-400 text-white font-bold{% else %}hover:bg-blue-400 hover:text-gray-900{% endif %}">
-                <i class="material-icons">view_in_ar</i>
-                Products   
-                </a>
+            <li x-data="{ open: {% if 'inventory' in request.resolver_match.view_name or 'warehouses' in request.resolver_match.view_name %} true {% else %} false {% endif %} }">
+                <button @click="open = !open" class="w-full flex justify-between items-center gap-2 py-2 px-4 rounded transition hover:bg-blue-400 hover:text-gray-900 focus:outline-none">
+                    <span class="flex items-center gap-2">
+                        <i class="material-icons">inventory_2</i>
+                        Inventory Management
+                    </span>
+                    <i class="material-icons" x-text="open ? 'expand_less' : 'expand_more'"></i>
+                </button>
+                <ul x-show="open" class="space-y-2 mt-2 ml-4">
+                    <li>
+                        <a href="{% url 'inventory:inventory' %}" class="flex items-center gap-2 py-2 px-4 rounded transition {% if request.resolver_match.url_name == 'inventory' or request.resolver_match.url_name == 'inventory.add_product_stock' or request.resolver_match.url_name == 'inventory.stock_logs' or request.resolver_match.url_name == 'inventory.adjust_stock' %}bg-blue-400 text-white font-bold{% else %}hover:bg-blue-400 hover:text-gray-900{% endif %}">
+                            <i class="material-icons">inventory</i>
+                            Inventory List
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'warehouses:warehouses' %}" class="flex items-center gap-2 py-2 px-4 rounded transition {% if request.resolver_match.url_name == 'warehouses' or request.resolver_match.url_name == 'warehouse.add' %}bg-blue-400 text-white font-bold{% else %}hover:bg-blue-400 hover:text-gray-900{% endif %}">
+                            <i class="material-icons">warehouse</i>
+                            Warehouses
+                        </a>
+                    </li>
+                </ul>
             </li>
-            <li>
-                <a href="{% url 'products:categories' %}" 
-                class="flex items-center gap-2 py-2 px-4 rounded transition
-                {% if request.resolver_match.url_name == 'categories' or request.resolver_match.url_name == 'category.add' or request.resolver_match.url_name == 'category.edit' %}bg-blue-400 text-white font-bold{% else %}hover:bg-blue-400 hover:text-gray-900{% endif %}">
-                <i class="material-icons">category</i>
-                Categories   
-                </a>
-            </li>
-            <li>
-                <a href="{% url 'inventory:inventory' %}" 
-                class="flex items-center gap-2 py-2 px-4 rounded transition
-                {% if request.resolver_match.url_name == 'inventory' or request.resolver_match.url_name == 'inventory.add_product_stock' or request.resolver_match.url_name == 'inventory.stock_logs' or request.resolver_match.url_name == 'inventory.adjust_stock' %}bg-blue-400 text-white font-bold{% else %}hover:bg-blue-400 hover:text-gray-900{% endif %}">
-                <i class="material-icons">inventory_2</i>
-                Inventory
-                </a>
-            </li>
-            <li>
-                <a href="{% url 'warehouses:warehouses' %}" 
-                class="flex items-center gap-2 py-2 px-4 rounded transition
-                {% if request.resolver_match.url_name == 'warehouses' or request.resolver_match.url_name == 'warehouse.add' %}bg-blue-400 text-white font-bold{% else %}hover:bg-blue-400 hover:text-gray-900{% endif %}">
-                <i class="material-icons">warehouse</i>
-                Warehouses
-                </a>
-            <li>
-                <a href="{% url 'users:users' %}" 
-                class="flex items-center gap-2 py-2 px-4 rounded transition
-                {% if request.resolver_match.url_name == 'users' or request.resolver_match.url_name == 'users.add' or request.resolver_match.url_name == 'users.edit' %}bg-blue-400 text-white font-bold{% else %}hover:bg-blue-400 hover:text-gray-900{% endif %}">
-                <i class="material-icons">people</i>
-                Users   
-                </a>
+
+            <li x-data="{ open: {% if 'users' in request.resolver_match.view_name %} true {% else %} false {% endif %} }">
+                <button @click="open = !open" class="w-full flex justify-between items-center gap-2 py-2 px-4 rounded transition hover:bg-blue-400 hover:text-gray-900 focus:outline-none">
+                    <span class="flex items-center gap-2">
+                        <i class="material-icons">people</i>
+                        User Management
+                    </span>
+                    <i class="material-icons" x-text="open ? 'expand_less' : 'expand_more'"></i>
+                </button>
+                <ul x-show="open" class="space-y-2 mt-2 ml-4">
+                    <li>
+                        <a href="{% url 'users:users' %}" class="flex items-center gap-2 py-2 px-4 rounded transition {% if request.resolver_match.url_name == 'users' or request.resolver_match.url_name == 'users.add' or request.resolver_match.url_name == 'users.edit' %}bg-blue-400 text-white font-bold{% else %}hover:bg-blue-400 hover:text-gray-900{% endif %}">
+                            <i class="material-icons">person</i>
+                            Users
+                        </a>
+                    </li>
+                </ul>
             </li>
         </ul>
     </nav>
